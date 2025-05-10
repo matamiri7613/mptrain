@@ -11,7 +11,7 @@ app.secret_key = 'your_secret_key'  # Required for session management and flash 
 # User database with updated roles - removed admin user
 users = {
     'user1': {
-        'password': 'user123',
+        'password': 'user1234',
         'role': 'primary_reviewer'
     },
     'user2': {
