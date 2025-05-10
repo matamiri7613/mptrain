@@ -1,0 +1,2274 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Secondary Reviewer Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/persian-datepicker/1.2.0/css/persian-datepicker.min.css">
+    <style>
+        @font-face {
+            font-family: 'B Nazanin';
+            src: url('https://cdn.fontcdn.ir/Font/Persian/Nazanin/Nazanin.eot');
+            src: url('https://cdn.fontcdn.ir/Font/Persian/Nazanin/Nazanin.eot?#iefix') format('embedded-opentype'),
+                 url('https://cdn.fontcdn.ir/Font/Persian/Nazanin/Nazanin.woff') format('woff'),
+                 url('https://cdn.fontcdn.ir/Font/Persian/Nazanin/Nazanin.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+        
+        body {
+            font-family: 'B Nazanin', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            direction: rtl;
+            font-size: 16px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        h1, h2, h3, h4 {
+            font-family: 'B Nazanin', Arial, sans-serif;
+            color: #333;
+            text-align: center;
+        }
+        h1 {
+            font-size: 28px;
+            margin-bottom: 25px;
+        }
+        h3 {
+            font-size: 20px;
+            margin: 15px 0;
+            color: #2196F3;
+        }
+        .submission-list {
+            margin-top: 20px;
+        }
+        .submission-item {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .submission-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .submission-details {
+            margin-bottom: 15px;
+            background-color: #f0f8ff;
+            padding: 12px;
+            border-radius: 4px;
+            line-height: 1.6;
+        }
+        .submission-details strong {
+            color: #0066cc;
+        }
+        .submission-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-family: 'B Nazanin', Arial, sans-serif;
+            font-size: 16px;
+        }
+        .btn-acknowledge {
+            background-color: #2196F3;
+            color: white;
+            transition: background-color 0.3s;
+        }
+        .btn-acknowledge:hover {
+            background-color: #0b7dda;
+        }
+        .pending-badge {
+            background-color: #FFC107;
+            color: #333;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .acknowledged-badge {
+            background-color: #4CAF50;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .no-submissions {
+            text-align: center;
+            padding: 30px;
+            color: #666;
+            font-size: 18px;
+        }
+        .nav-links {
+            margin-bottom: 20px;
+            text-align: center;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+        }
+        .nav-links a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: #0066cc;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+        .comment-box {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: 'B Nazanin', Arial, sans-serif;
+            font-size: 16px;
+        }
+        .additional-data {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #e8f4ff;
+            border-radius: 4px;
+            border-left: 4px solid #2196F3;
+        }
+        .additional-data h3 {
+            text-align: right;
+            color: #2196F3;
+            margin-top: 0;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #cce5ff;
+        }
+        .data-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .data-input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: 'B Nazanin', Arial, sans-serif;
+            font-size: 16px;
+        }
+        .error-message {
+            color: #f44336;
+            font-size: 14px;
+            margin-top: 10px;
+            display: none;
+            background-color: #ffebee;
+            padding: 8px;
+            border-radius: 4px;
+            text-align: center;
+        }
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 20px;
+            margin-bottom: 12px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 8px;
+            color: #333;
+        }
+        .measurement-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            direction: rtl;
+            text-align: center;
+            font-family: 'B Nazanin', Arial, sans-serif;
+        }
+        .measurement-table th, .measurement-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+        .measurement-table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        .measurement-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .out-of-range {
+            background-color: #ffcccc;
+        }
+        .galv-input-invalid {
+            background-color: #ffcccc;
+        }
+        .test-result-failed {
+            background-color: #ffcccc;
+            font-weight: bold;
+        }
+        .test-result-passed {
+            background-color: #ccffcc;
+            font-weight: bold;
+        }
+        .standard-ranges {
+            margin-top: 15px;
+            padding: 12px;
+            background-color: #f5f5f5;
+            border-radius: 4px;
+            font-size: 16px;
+            border-left: 4px solid #ff9800;
+        }
+        .table-container {
+            margin-bottom: 25px;
+            overflow-x: auto;
+            border-radius: 4px;
+            border: 1px solid #e0e0e0;
+        }
+        select.data-input {
+            padding: 10px;
+        }
+        .galv-summary {
+            margin-top: 15px;
+            padding: 12px;
+            background-color: #f5f5f5;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            border: 1px dashed #4CAF50;
+        }
+        .required-test-section {
+            border: 2px solid #ff9800;
+            padding: 15px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            background-color: #fff3e0;
+        }
+        .required-test-title {
+            color: #e65100;
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 20px;
+            text-align: center;
+        }
+        .attention-message {
+            color: #d32f2f;
+            font-weight: bold;
+            padding: 12px;
+            margin-top: 10px;
+            margin-bottom: 15px;
+            border: 1px dashed #d32f2f;
+            border-radius: 4px;
+            text-align: center;
+            background-color: #ffebee;
+        }
+        .select-appropriate {
+            background-color: #ccffcc !important;
+        }
+        .select-inappropriate {
+            background-color: #ffcccc !important;
+        }
+        /* Style for checkboxes container */
+        .checkbox-container {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #fff4e5;
+            border: 1px solid #ffa726;
+            border-radius: 4px;
+        }
+        .checkbox-item {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .checkbox-item input[type="checkbox"] {
+            margin-left: 10px;
+            width: 20px;
+            height: 20px;
+        }
+        .checkbox-item label {
+            font-weight: bold;
+            color: #333;
+            font-size: 16px;
+        }
+        .checkbox-required {
+            color: #d32f2f;
+            font-size: 14px;
+            margin-right: 8px;
+        }
+        /* Enhanced styles for data display */
+        .data-display {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            border-left: 3px solid #2196F3;
+        }
+        .data-display p {
+            margin: 8px 0;
+            line-height: 1.5;
+        }
+        .data-label {
+            display: inline-block;
+            min-width: 180px;
+            font-weight: bold;
+            color: #0066cc;
+        }
+        .data-value {
+            font-weight: normal;
+            color: #333;
+        }
+        .data-section {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed #ccc;
+        }
+        .data-section:last-child {
+            border-bottom: none;
+        }
+        .highlight-average {
+            background-color: #e6f7ff;
+            font-weight: bold;
+        }
+        /* New styles for standards table */
+        .standards-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            direction: rtl;
+            text-align: center;
+            background-color: #fffaf0;
+            border: 2px solid #ff9800;
+        }
+        .standards-table th {
+            background-color: #ff9800;
+            color: white;
+            font-weight: bold;
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #e0e0e0;
+        }
+        .standards-table td {
+            padding: 8px 12px;
+            border: 1px solid #e0e0e0;
+            text-align: center;
+        }
+        .standards-table tr:nth-child(even) {
+            background-color: #fff8e1;
+        }
+        .dimension-label {
+            font-weight: bold;
+            color: #0066cc;
+        }
+        .range-value {
+            font-weight: bold;
+            color: #333;
+        }
+        .standards-caption {
+            font-weight: bold;
+            color: #ff5722;
+            margin-bottom: 10px;
+            font-size: 16px;
+            text-align: center;
+        }
+        /* Style for standard diagram */
+        .standard-diagram {
+            margin: 15px auto;
+            text-align: center;
+        }
+        .standard-diagram img {
+            max-width: 100%;
+            border: 2px solid #ff9800;
+            border-radius: 4px;
+        }
+        .standard-diagram-caption {
+            margin-top: 10px;
+            font-weight: bold;
+            color: #333;
+            text-align: center;
+            font-size: 16px;
+        }
+        .standard-diagram-legend {
+            margin-top: 5px;
+            text-align: right;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav-links">
+            <a href="{{ url_for('index') }}">صفحه اصلی</a>
+            <a href="{{ url_for('logout') }}">خروج</a>
+        </div>
+        
+        <h1>داشبورد آزمایشگاه و کنترل کیفیت</h1>
+        
+        <div class="submission-list" id="submissions-container">
+            <div class="no-submissions">در حال بارگیری...</div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/persian-datepicker/1.2.0/js/persian-datepicker.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetchSubmissions();
+        });
+
+        // Define the standard ranges for all product types
+        const productStandardRanges = {
+            'کلاهک': { A: { min: 75, max: 76.5 }, B: { min: 87, max: 89 }, C: { min: 9, max: 10 }, D: { min: 3.4, max: 4.6 } },
+            'کلاهک 90': { A: { min: 90, max: 100 }, B: { min: 87, max: 89 }, C: { min: 9, max: 10 }, D: { min: 3.4, max: 4.6 } },
+            'کلاهک 140': { A: { min: 150, max: 153 }, B: { min: 87, max: 89 }, C: { min: 9, max: 10 }, D: { min: 3.4, max: 4.6 } },
+            'کلاهک 180': { A: { min: 180, max: 181 }, B: { min: 87, max: 89 }, C: { min: 9, max: 10 }, D: { min: 3.4, max: 4.6 } },
+            'کلاهک 210': { A: { min: 210, max: 211 }, B: { min: 87, max: 89 }, C: { min: 9, max: 10 }, D: { min: 3.4, max: 4.6 } },
+            'دستک 90': { A: { min: 75, max: 76.5 }, B: { min: 87, max: 89 }, C: { min: 9, max: 10 }, D: { min: 3.4, max: 4.6 } },
+            'دستک 140': { A: { min: 141, max: 142 }, B: { min: 87, max: 89 }, C: { min: 9, max: 10 }, D: { min: 3.4, max: 4.6 } },
+            'دستک 180': { A: { min: 181, max: 182 }, B: { min: 87, max: 89 }, C: { min: 9, max: 10 }, D: { min: 3.4, max: 4.6 } },
+            'اشپیل 16': { A: { min: 16, max: 17 }, B: { min: 87, max: 89 }, C: { min: 9, max: 10 }, D: { min: 3.4, max: 4.6 } },
+            'اشپیل 20': { A: { min: 20, max: 21 }, B: { min: 87, max: 89 }, C: { min: 9, max: 10 }, D: { min: 3.4, max: 4.6 } },
+            'دیسک 80': { A: { min: 75, max: 76.5 }, B: { min: 20, max: 21 }, C: { min: 9, max: 10 }, D: { min: 3.4, max: 4.6 } },
+            'دیسک 120': { A: { min: 75, max: 76.5 }, B: { min: 21, max: 22 }, C: { min: 9, max: 10 }, D: { min: 3.4, max: 4.6 } },
+            'دیسک 160': { A: { min: 75, max: 76.5 }, B: { min: 22, max: 23 }, C: { min: 9, max: 10 }, D: { min: 3.4, max: 4.6 } },
+            'دیسک 210': { A: { min: 75, max: 76.5 }, B: { min: 23, max: 24 }, C: { min: 9, max: 10 }, D: { min: 3.4, max: 4.6 } },
+        };
+
+        // Define categories for product types
+        const productTypeCategories = {
+            'کلاهک': 'کلاهک',
+            'کلاهک 90': 'کلاهک',
+            'کلاهک 140': 'کلاهک',
+            'کلاهک 180': 'کلاهک',
+            'کلاهک 210': 'کلاهک',
+            'دستک': 'دستک',
+            'دستک 140': 'دستک',
+            'دستک 180': 'دستک',
+            'اشپیل 16': 'اشپیل',
+            'اشپیل 20': 'اشپیل',
+            'دیسک 80': 'دیسک',
+            'دیسک 120': 'دیسک',
+            'دیسک 160': 'دیسک',
+            'دیسک 210': 'دیسک',
+        };
+        
+        // Define products that require galvanized test
+        const galvanizedTestRequired = [
+            'کلاهک 90',
+            'کلاهک 140',
+            'کلاهک 180',
+            'کلاهک 210',
+            'دستک 140',
+            'دستک 180'
+        ];
+        
+        // Define products that require template report
+        const templateReportRequired = [
+            'کلاهک 90',
+            'کلاهک 140',
+            'کلاهک 180',
+            'کلاهک 210',
+            'دستک 140',
+            'دستک 180'
+        ];
+        
+        // Define products that need to show standard diagram
+        const showStandardDiagram = [
+        'کلاهک 90',
+        'کلاهک 140',
+        'کلاهک 180',
+        'کلاهک 210',
+        'اشپیل 16',
+        'اشپیل 20',
+        'دستک 90',
+        'دستک 140',
+        'دستک 180',
+        'دیسک 80',
+        'دیسک 120',
+        'دیسک 160',
+        'دیسک 210'
+    ];
+
+        function fetchSubmissions() {
+            fetch('/reviewer/review_submissions')
+                .then(response => response.json())
+                .then(data => {
+                    displaySubmissions(data);
+                })
+                .catch(error => {
+                    console.error('Error fetching submissions:', error);
+                    document.getElementById('submissions-container').innerHTML = 
+                        '<div class="no-submissions">خطا در بارگیری داده‌ها</div>';
+                });
+        }
+
+        function displaySubmissions(submissions) {
+            const container = document.getElementById('submissions-container');
+            
+            if (submissions.length === 0) {
+                container.innerHTML = '<div class="no-submissions">هیچ درخواستی برای تایید دریافت وجود ندارد</div>';
+                return;
+            }
+            
+            let html = '';
+            
+            submissions.forEach(submission => {
+                // Determine if this submission has already been acknowledged
+                const isAcknowledged = submission.hasOwnProperty('acknowledged') && submission.acknowledged;
+                const badgeClass = isAcknowledged ? 'acknowledged-badge' : 'pending-badge';
+                const badgeText = isAcknowledged ? 'تایید دریافت شده' : 'در انتظار تایید دریافت';
+                
+                // Get product type value (A)
+                const productType = submission.A;
+                // Get the category for this product type
+                const productCategory = productTypeCategories[productType] || productType;
+                // Check if this product requires galvanized test
+                const requiresGalvanizedTest = galvanizedTestRequired.includes(productType);
+                // Check if this product requires template report
+                const requiresTemplateReport = templateReportRequired.includes(productType);
+                // Check if this product should show standard diagram
+                const shouldShowDiagram = showStandardDiagram.includes(productType);
+                
+                html += `
+                    <div class="submission-item" id="submission-${submission.id}" data-product-type="${productType}" data-requires-galvanized="${requiresGalvanizedTest}" data-requires-template="${requiresTemplateReport}">
+                        <div class="submission-header">
+                            <div>
+                                <strong>ارسال کننده:</strong> ${submission.submitter} 
+                                <strong>تاریخ:</strong> ${new Date(submission.submission_timestamp * 1000).toLocaleString('fa-IR')}
+                            </div>
+                            <div><span class="${badgeClass}">${badgeText}</span></div>
+                        </div>
+                        <div class="submission-details">
+                            <div class="data-section">
+                                <h4>اطلاعات پایه</h4>
+                                <p><span class="data-label">نوع محصول:</span> <span class="data-value">${submission.A}</span></p>
+                                <p><span class="data-label">وزن (کیلوگرم):</span> <span class="data-value">${submission.B}</span></p>
+                                <p><span class="data-label">تعداد (عدد):</span> <span class="data-value">${submission.C}</span></p>
+                                <p><span class="data-label">کد کالا:</span> <span class="data-value">${submission.D}</span></p>
+                                <p><span class="data-label">تعداد سالم بعد از شمارش:</span> <span class="data-value">${submission.E} عدد</span></p>
+                            </div>
+                            <div class="data-section">
+                                <p><span class="data-label">سازنده:</span> <span class="data-value">${submission.manufacturer}</span></p>
+                                <p><span class="data-label">تاریخ:</span> <span class="data-value">${submission.date}</span></p>
+                                <p><span class="data-label">نظر بررسی کننده اولیه:</span> <span class="data-value">${submission.primary_reviewer_comment || 'بدون نظر'}</span></p>
+                            </div>
+                        </div>`;
+                
+                // Only show the acknowledge button if not already acknowledged
+                if (!isAcknowledged) {
+                    html += `<div class="additional-data">
+                        <h3>داده‌های تکمیلی الزامی</h3>`;
+                    
+                    // Show fields based on product category
+                    if (productCategory === 'کلاهک' || productCategory === 'دیسک') {
+                        // Get the specific ranges for this product type
+                        const standardRanges = productStandardRanges[productType] || productStandardRanges['کلاهک'];
+                        
+                        html += `
+                        <div class="section-title">اطلاعات کلی</div>
+                        <div class="data-row">
+                            <input type="text" id="packaging-status-${submission.id}" class="data-input" placeholder="وضعیت بسته بندی">
+                            <input type="text" id="manufacturer-name-${submission.id}" class="data-input" placeholder="نام سازنده">
+                        </div>
+                        <div class="data-row">
+                            <input type="number" id="arrival-number-${submission.id}" class="data-input" placeholder="شماره ورود">
+                            <input type="number" id="storage-code-${submission.id}" class="data-input" placeholder="کد انبار">
+                        </div>
+                        <div class="data-row">
+                            <input type="text" id="persian-date-${submission.id}" class="data-input" placeholder="تاریخ (شمسی)">
+                        </div>
+                        
+                        <div class="required-test-section">
+                            <div class="required-test-title">استانداردهای اندازه گیری</div>
+                            <div class="standards-caption">مقادیر استاندارد برای محصول ${productType}</div>
+                            <table class="standards-table">
+                                <thead>
+                                    <tr>
+                                        <th>بعد</th>
+                                        <th>حداقل مجاز</th>
+                                        <th>حداکثر مجاز</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="dimension-label">A</td>
+                                        <td class="range-value">${standardRanges.A.min}</td>
+                                        <td class="range-value">${standardRanges.A.max}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="dimension-label">B</td>
+                                        <td class="range-value">${standardRanges.B.min}</td>
+                                        <td class="range-value">${standardRanges.B.max}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="dimension-label">C</td>
+                                        <td class="range-value">${standardRanges.C.min}</td>
+                                        <td class="range-value">${standardRanges.C.max}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="dimension-label">D</td>
+                                        <td class="range-value">${standardRanges.D.min}</td>
+                                        <td class="range-value">${standardRanges.D.max}</td>
+                                    </tr>
+                                </tbody>
+                            </table>`;
+                            
+                            // Add standard diagram for specific products
+                            if (shouldShowDiagram) {
+                                // Check if the product is اشپیل (Shpeil)
+                                if (productType.includes('اشپیل')) {
+                                    html += `
+                                    <div class="standard-diagram">
+                                        <img src="https://i.postimg.cc/MprdHBGY/shpeilpic.jpg" alt="نقشه استاندارد اشپیل">
+                                        <div class="standard-diagram-caption">نقشه استاندارد اشپیل</div>
+                                        <div class="standard-diagram-legend">
+                                            1- اشپیل 16<br>
+                                            2- اشپیل 20
+                                        </div>
+                                    </div>`;
+                                } else if (productType.includes('دستک')) {
+                                    html += `
+                                    <div class="standard-diagram">
+                                        <img src="https://i.postimg.cc/kXcyhg2K/pinpic.jpg" alt="نقشه استاندارد دستک">
+                                        <div class="standard-diagram-caption">نقشه استاندارد دستک</div>
+                                        <div class="standard-diagram-legend">
+                                            1- دستک 90<br>
+                                            2- دستک 140<br>
+                                            3- دستک 180
+                                        </div>
+                                    </div>`;
+                                } else if (productType.includes('دیسک')) {
+                                    html += `
+                                    <div class="standard-diagram">
+                                        <img src="https://i.postimg.cc/KvJnDpW5/diskpic.jpg" alt="نقشه استاندارد دیسک">
+                                        <div class="standard-diagram-caption">نقشه استاندارد دیسک</div>
+                                        <div class="standard-diagram-legend">
+                                            1- دیسک 80<br>
+                                            2- دیسک 120<br>
+                                            3- دیسک 160<br>
+                                            4- دیسک 210
+                                        </div>
+                                    </div>`;
+                                } else {
+                                    // Original code for کلاهک products
+                                    html += `
+                                    <div class="standard-diagram">
+                                        <img src="https://i.postimg.cc/dV70PMZV/cappicture.png" alt="نقشه استاندارد">
+                                        <div class="standard-diagram-caption">نقشه استاندارد</div>
+                                        <div class="standard-diagram-legend">
+                                            1- کلاهک 90<br>
+                                            2- کلاهک 140<br>
+                                            3- کلاهک 180<br>
+                                            4- کلاهک 210
+                                        </div>
+                                    </div>`;
+                                }
+                            }
+                        html += `</div>
+                        
+                        <div class="required-test-section">
+                            <div class="required-test-title">جدول تست ابعاد</div>
+                            <div class="table-container">
+                                <table class="measurement-table" id="dimensional-test-${submission.id}">
+                                    <thead>
+                                        <tr>
+                                            <th>شماره نمونه</th>
+                                            <th>A</th>
+                                            <th>B</th>
+                                            <th>C</th>
+                                            <th>D</th>
+                                            <th>E</th>
+                                            <th>F</th>
+                                            <th>G</th>
+                                            <th>H</th>
+                                            <th>I</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${Array(10).fill().map((_, rowIndex) => `
+                                            <tr>
+                                                <td>${rowIndex + 1}</td>
+                                                ${Array(9).fill().map((_, colIndex) => {
+                                                    const colName = String.fromCharCode(65 + colIndex); // A, B, C, ...
+                                                    const inputId = `dim-${submission.id}-${rowIndex}-${colName}`;
+                                                    
+                                                    if (colName === 'A' || colName === 'B' || colName === 'C' || colName === 'D') {
+                                                        return `<td><input type="number" step="0.1" id="${inputId}" class="data-input dimension-input" data-row="${rowIndex}" data-col="${colName}" data-product="${productType}" style="width: 50px;"></td>`;
+                                                    } else {
+                                                        return `<td><input type="number" step="0.1" id="${inputId}" class="data-input" style="width: 50px;"></td>`;
+                                                    }
+                                                }).join('')}
+                                            </tr>
+                                        `).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <!-- Template Report Section with special styling for required products -->
+                        ${requiresTemplateReport ? '<div class="required-test-section">' : ''}
+                        <div class="${requiresTemplateReport ? 'required-test-title' : 'section-title'}">گزارش شابلون</div>
+                        ${requiresTemplateReport ? '<div class="attention-message">توجه: گزارش شابلون برای محصول ' + productType + ' الزامی است!</div>' : ''}
+                        <div class="table-container">
+                            <table class="measurement-table" id="template-report-${submission.id}">
+                                <thead>
+                                    <tr>
+                                        <th>شماره نمونه</th>
+                                        <th>قالب 1</th>
+                                        <th>قالب 2</th>
+                                        <th>قالب 3</th>
+                                        <th>قالب 4</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${Array(10).fill().map((_, rowIndex) => `
+                                        <tr>
+                                            <td>${rowIndex + 1}</td>
+                                            ${Array(4).fill().map((_, colIndex) => {
+                                                const colIndex1 = colIndex + 1; // 1, 2, 3, 4
+                                                const selectId = `templ-${submission.id}-${rowIndex}-${colIndex1}`;
+                                                const requiredAttr = requiresTemplateReport && rowIndex < 3 && colIndex < 3 ? 'required' : '';
+                                                
+                                                return `<td>
+                                                    <select id="${selectId}" class="data-input template-select" data-submissionid="${submission.id}" data-row="${rowIndex}" data-col="${colIndex1}" data-required="${requiresTemplateReport}" ${requiredAttr} style="width: 70px;">
+                                                        <option value="">انتخاب</option>
+                                                        <option value="okay">مناسب</option>
+                                                        <option value="not-okay">نامناسب</option>
+                                                    </select>
+                                                </td>`;
+                                            }).join('')}
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                        ${requiresTemplateReport ? '</div>' : ''}
+                        
+                        <!-- Section for galvanized test - apply special styling for required tests -->
+                        <div class="required-test-section">
+                            <div class="required-test-title">تست گالوانیزه (هر نمونه باید بیشتر از 80 باشد و میانگین بیشتر از 100)</div>
+                            ${requiresGalvanizedTest ? `
+                            <div class="attention-message">
+                                توجه: تست گالوانیزه برای محصول ${productType} الزامی است!
+                            </div>` : ''}
+                            <div class="table-container">
+                                <table class="measurement-table" id="galvanized-test-${submission.id}">
+                                    <thead>
+                                        <tr>
+                                            <th>شماره نمونه</th>
+                                            <th>تست 1</th>
+                                            <th>تست 2</th>
+                                            <th>تست 3</th>
+                                            <th>تست 4</th>
+                                            <th>تست 5</th>
+                                            <th>میانگین</th>
+                                            <th>نتیجه</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${Array(10).fill().map((_, rowIndex) => `
+                                            <tr>
+                                                <td>${rowIndex + 1}</td>
+                                                ${Array(5).fill().map((_, colIndex) => {
+                                                    const colIndex1 = colIndex + 1; // 1, 2, 3, 4, 5
+                                                    const inputId = `galv-${submission.id}-${rowIndex}-${colIndex1}`;
+                                                    const requiredAttr = requiresGalvanizedTest && rowIndex < 3 && colIndex < 3 ? 'required' : '';
+                                                    
+                                                    return `<td>
+                                                        <input type="number" min="0" id="${inputId}" class="data-input galvanized-input" 
+                                                            data-submissionid="${submission.id}" data-row="${rowIndex}" data-col="${colIndex1}" 
+                                                            data-required="${requiresGalvanizedTest}" ${requiredAttr} style="width: 50px;">
+                                                    </td>`;
+                                                }).join('')}
+                                                <td id="galv-average-${submission.id}-${rowIndex}" class="highlight-average">-</td>
+                                                <td id="galv-result-${submission.id}-${rowIndex}">-</td>
+                                            </tr>
+                                        `).join('')}
+                                    </tbody>
+                                </table>
+                                <div class="galv-summary" id="galv-summary-${submission.id}">
+                                    میانگین: - | نتیجه کلی: -
+                                </div>
+                            </div>
+                        </div>`;
+                    } else if (productCategory === 'دستک' || productCategory === 'اشپیل') {
+                        // Get the specific ranges for this product type
+                        const standardRanges = productStandardRanges[productType] || productStandardRanges['دستک'];
+                        
+                        html += `
+                        <div class="section-title">اطلاعات کلی</div>
+                        <div class="data-row">
+                            <input type="text" id="quality-check-${submission.id}" class="data-input" placeholder="نتایج کنترل کیفیت">
+                            <input type="text" id="packaging-status-${submission.id}" class="data-input" placeholder="وضعیت بسته بندی">
+                        </div>
+                        <div class="data-row">
+                            <input type="number" id="arrival-number-${submission.id}" class="data-input" placeholder="شماره ورود">
+                            <input type="number" id="storage-code-${submission.id}" class="data-input" placeholder="کد انبار">
+                        </div>
+                        
+                        <div class="required-test-section">
+                            <div class="required-test-title">استانداردهای اندازه گیری</div>
+                            <div class="standards-caption">مقادیر استاندارد برای محصول ${productType}</div>
+                            <table class="standards-table">
+                                <thead>
+                                    <tr>
+                                        <th>بعد</th>
+                                        <th>حداقل مجاز</th>
+                                        <th>حداکثر مجاز</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="dimension-label">A</td>
+                                        <td class="range-value">${standardRanges.A.min}</td>
+                                        <td class="range-value">${standardRanges.A.max}</td>
+                                    </tr>
+                                </tbody>
+                            </table>`;
+                            
+                            // Add standard diagram for specific products (unlikely but just in case)
+                            if (shouldShowDiagram) {
+                                // Check if the product is اشپیل (Shpeil)
+                                if (productType.includes('اشپیل')) {
+                                    html += `
+                                    <div class="standard-diagram">
+                                        <img src="https://i.postimg.cc/MprdHBGY/shpeilpic.jpg" alt="نقشه استاندارد اشپیل">
+                                        <div class="standard-diagram-caption">نقشه استاندارد اشپیل</div>
+                                        <div class="standard-diagram-legend">
+                                            1- اشپیل 16<br>
+                                            2- اشپیل 20
+                                        </div>
+                                    </div>`;
+                                } else if (productType.includes('دستک')) {
+                                    html += `
+                                    <div class="standard-diagram">
+                                        <img src="https://i.postimg.cc/kXcyhg2K/pinpic.jpg" alt="نقشه استاندارد دستک">
+                                        <div class="standard-diagram-caption">نقشه استاندارد دستک</div>
+                                        <div class="standard-diagram-legend">
+                                            1- دستک 90<br>
+                                            2- دستک 140<br>
+                                            3- دستک 180
+                                        </div>
+                                    </div>`;
+                                } else if (productType.includes('دیسک')) {
+                                    html += `
+                                    <div class="standard-diagram">
+                                        <img src="https://i.postimg.cc/KvJnDpW5/diskpic.jpg" alt="نقشه استاندارد دیسک">
+                                        <div class="standard-diagram-caption">نقشه استاندارد دیسک</div>
+                                        <div class="standard-diagram-legend">
+                                            1- دیسک 80<br>
+                                            2- دیسک 120<br>
+                                            3- دیسک 160<br>
+                                            4- دیسک 210
+                                        </div>
+                                    </div>`;
+                                } else {
+                                    // Original code for کلاهک products
+                                    html += `
+                                    <div class="standard-diagram">
+                                        <img src="https://i.postimg.cc/dV70PMZV/cappicture.png" alt="نقشه استاندارد">
+                                        <div class="standard-diagram-caption">نقشه استاندارد</div>
+                                        <div class="standard-diagram-legend">
+                                            1- کلاهک 90<br>
+                                            2- کلاهک 140<br>
+                                            3- کلاهک 180<br>
+                                            4- کلاهک 210
+                                        </div>
+                                    </div>`;
+                                }
+                            }
+                            
+                        html += `</div>
+                        
+                        <div class="required-test-section">
+                            <div class="required-test-title">جدول تست ابعاد</div>
+                            <div class="table-container">
+                                <table class="measurement-table" id="dimensional-test-${submission.id}">
+                                    <thead>
+                                        <tr>
+                                            <th>شماره نمونه</th>
+                                            <th>A</th>
+                                            <th>B</th>
+                                            <th>C</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${Array(10).fill().map((_, rowIndex) => `
+                                            <tr>
+                                                <td>${rowIndex + 1}</td>
+                                                ${Array(3).fill().map((_, colIndex) => {
+                                                    const colName = String.fromCharCode(65 + colIndex); // A, B, C
+                                                    const inputId = `dim-${submission.id}-${rowIndex}-${colName}`;
+                                                    
+                                                    if (colName === 'A') {
+                                                        return `<td><input type="number" step="0.1" id="${inputId}" class="data-input dimension-input" data-row="${rowIndex}" data-col="${colName}" data-product="${productType}" style="width: 50px;"></td>`;
+                                                    } else {
+                                                        return `<td><input type="number" step="0.1" id="${inputId}" class="data-input" style="width: 50px;"></td>`;
+                                                    }
+                                                }).join('')}
+                                            </tr>
+                                        `).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>`;
+                        
+                        // Add Template Report and Galvanized Test for special دستک products
+                        if (productCategory === 'دستک' || productCategory === 'اشپیل') {
+                            // Add Template Report if required
+                            if (requiresTemplateReport) {
+                                html += `
+                                <div class="required-test-section">
+                                    <div class="required-test-title">گزارش شابلون</div>
+                                    <div class="attention-message">
+                                        توجه: گزارش شابلون برای محصول ${productType} الزامی است!
+                                    </div>
+                                    <div class="table-container">
+                                        <table class="measurement-table" id="template-report-${submission.id}">
+                                            <thead>
+                                                <tr>
+                                                    <th>شماره نمونه</th>
+                                                    <th>قالب 1</th>
+                                                    <th>قالب 2</th>
+                                                    <th>قالب 3</th>
+                                                    <th>قالب 4</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                ${Array(10).fill().map((_, rowIndex) => `
+                                                    <tr>
+                                                        <td>${rowIndex + 1}</td>
+                                                        ${Array(4).fill().map((_, colIndex) => {
+                                                            const colIndex1 = colIndex + 1; // 1, 2, 3, 4
+                                                            const selectId = `templ-${submission.id}-${rowIndex}-${colIndex1}`;
+                                                            const requiredAttr = rowIndex < 3 && colIndex < 3 ? 'required' : '';
+                                                            
+                                                            return `<td>
+                                                                <select id="${selectId}" class="data-input template-select" 
+                                                                    data-submissionid="${submission.id}" data-row="${rowIndex}" data-col="${colIndex1}" 
+                                                                    data-required="true" ${requiredAttr} style="width: 70px;">
+                                                                    <option value="">انتخاب</option>
+                                                                    <option value="okay">مناسب</option>
+                                                                    <option value="not-okay">نامناسب</option>
+                                                                </select>
+                                                            </td>`;
+                                                        }).join('')}
+                                                    </tr>
+                                                `).join('')}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>`;
+                            }
+                            
+                            // Add Galvanized Test if required
+                            if (requiresGalvanizedTest) {
+                                html += `
+                                <div class="required-test-section">
+                                    <div class="required-test-title">تست گالوانیزه (هر نمونه باید بیشتر از 80 باشد و میانگین بیشتر از 100)</div>
+                                    <div class="attention-message">
+                                        توجه: تست گالوانیزه برای محصول ${productType} الزامی است!
+                                    </div>
+                                    <div class="table-container">
+                                        <table class="measurement-table" id="galvanized-test-${submission.id}">
+                                            <thead>
+                                                <tr>
+                                                    <th>شماره نمونه</th>
+                                                    <th>تست 1</th>
+                                                    <th>تست 2</th>
+                                                    <th>تست 3</th>
+                                                    <th>تست 4</th>
+                                                    <th>تست 5</th>
+                                                    <th>میانگین</th>
+                                                    <th>نتیجه</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                ${Array(10).fill().map((_, rowIndex) => `
+                                                    <tr>
+                                                        <td>${rowIndex + 1}</td>
+                                                        ${Array(5).fill().map((_, colIndex) => {
+                                                            const colIndex1 = colIndex + 1; // 1, 2, 3, 4, 5
+                                                            const inputId = `galv-${submission.id}-${rowIndex}-${colIndex1}`;
+                                                            const requiredAttr = rowIndex < 3 && colIndex < 3 ? 'required' : '';
+                                                            
+                                                            return `<td>
+                                                                <input type="number" min="0" id="${inputId}" class="data-input galvanized-input" 
+                                                                    data-submissionid="${submission.id}" data-row="${rowIndex}" data-col="${colIndex1}" 
+                                                                    data-required="true" ${requiredAttr} style="width: 50px;">
+                                                            </td>`;
+                                                        }).join('')}
+                                                        <td id="galv-average-${submission.id}-${rowIndex}" class="highlight-average">-</td>
+                                                        <td id="galv-result-${submission.id}-${rowIndex}">-</td>
+                                                    </tr>
+                                                `).join('')}
+                                            </tbody>
+                                        </table>
+                                        <div class="galv-summary" id="galv-summary-${submission.id}">
+                                            میانگین: - | نتیجه کلی: -
+                                        </div>
+                                    </div>
+                                </div>`;
+                            }
+                        }
+                    } else {
+                        // Default - show general fields for other products
+                        html += `
+                        <div class="data-row">
+                            <input type="text" id="quality-check-${submission.id}" class="data-input" placeholder="نتیجه بررسی کیفیت">
+                            <input type="text" id="packaging-status-${submission.id}" class="data-input" placeholder="وضعیت بسته بندی">
+                        </div>
+                        <div class="data-row">
+                            <input type="text" id="production-line-${submission.id}" class="data-input" placeholder="خط تولید">
+                            <input type="text" id="verification-code-${submission.id}" class="data-input" placeholder="کد تایید محصول">
+                        </div>`;
+                    }
+                    
+                    // Add required checkboxes
+                    html += `
+                        <div class="checkbox-container">
+                            <div class="section-title">تاییدیه های الزامی</div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="lab-manager-${submission.id}" required>
+                                <label for="lab-manager-${submission.id}">مدیر آزمایشگاه</label>
+                                <span class="checkbox-required">(الزامی)</span>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="lab-supervisor-${submission.id}" required>
+                                <label for="lab-supervisor-${submission.id}">مسئول آزمایشگاه</label>
+                                <span class="checkbox-required">(الزامی)</span>
+                            </div>
+                        </div>
+                        
+                        <textarea class="comment-box" id="comment-${submission.id}" placeholder="توضیحات تکمیلی (الزامی)" required></textarea>
+                        <div class="error-message" id="error-message-${submission.id}">لطفا تمامی فیلدهای داده‌های تکمیلی را تکمیل کنید</div>
+                    </div>
+                    <div class="submission-actions">
+                        <button class="btn btn-acknowledge" onclick="acknowledgeSubmission('${submission.id}')">تایید دریافت و ارسال داده‌های تکمیلی</button>
+                    </div>`;
+                } else if (submission.secondary_reviewer_data) {
+                    // Show submitted data if already acknowledged
+                    html += `
+                        <div class="additional-data">
+                            <h3>داده‌های تکمیلی ارسال شده</h3>`;
+                    
+                    // Display fields based on product category
+                    if (productCategory === 'کلاهک' || productCategory === 'دیسک') {
+                        // Get the specific ranges for this product type
+                        const standardRanges = productStandardRanges[productType] || productStandardRanges['کلاهک'];
+                        
+                        html += `
+                            <div class="data-display">
+                                <div class="data-section">
+                                    <h4>اطلاعات کلی</h4>
+                                    <p><span class="data-label">وضعیت بسته بندی:</span> <span class="data-value">${submission.secondary_reviewer_data.packaging_status}</span></p>
+                                    <p><span class="data-label">نام سازنده:</span> <span class="data-value">${submission.secondary_reviewer_data.manufacturer_name || 'ثبت نشده'}</span></p>
+                                    <p><span class="data-label">شماره ورود:</span> <span class="data-value">${submission.secondary_reviewer_data.arrival_number || 'ثبت نشده'}</span></p>
+                                    <p><span class="data-label">کد انبار:</span> <span class="data-value">${submission.secondary_reviewer_data.storage_code || 'ثبت نشده'}</span></p>
+                                    <p><span class="data-label">تاریخ (شمسی):</span> <span class="data-value">${submission.secondary_reviewer_data.persian_date || 'ثبت نشده'}</span></p>
+                                </div>
+                            </div>`;
+                            
+                        // Display standards table for reference
+                        html += `
+                            <div class="section-title">استانداردهای اندازه گیری</div>
+                            <div class="standards-caption">مقادیر استاندارد برای محصول ${productType}</div>
+                            <table class="standards-table">
+                                <thead>
+                                    <tr>
+                                        <th>بعد</th>
+                                        <th>حداقل مجاز</th>
+                                        <th>حداکثر مجاز</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="dimension-label">A</td>
+                                        <td class="range-value">${standardRanges.A.min}</td>
+                                        <td class="range-value">${standardRanges.A.max}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="dimension-label">B</td>
+                                        <td class="range-value">${standardRanges.B.min}</td>
+                                        <td class="range-value">${standardRanges.B.max}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="dimension-label">C</td>
+                                        <td class="range-value">${standardRanges.C.min}</td>
+                                        <td class="range-value">${standardRanges.C.max}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="dimension-label">D</td>
+                                        <td class="range-value">${standardRanges.D.min}</td>
+                                        <td class="range-value">${standardRanges.D.max}</td>
+                                    </tr>
+                                </tbody>
+                            </table>`;
+                            
+                            // Add standard diagram for specified products in display mode too
+                            if (shouldShowDiagram) {
+                                // Check if the product is اشپیل (Shpeil)
+                                if (productType.includes('اشپیل')) {
+                                    html += `
+                                    <div class="standard-diagram">
+                                        <img src="https://i.postimg.cc/MprdHBGY/shpeilpic.jpg" alt="نقشه استاندارد اشپیل">
+                                        <div class="standard-diagram-caption">نقشه استاندارد اشپیل</div>
+                                        <div class="standard-diagram-legend">
+                                            1- اشپیل 16<br>
+                                            2- اشپیل 20
+                                        </div>
+                                    </div>`;
+                                } else if (productType.includes('دستک')) {
+                                    html += `
+                                    <div class="standard-diagram">
+                                        <img src="https://i.postimg.cc/kXcyhg2K/pinpic.jpg" alt="نقشه استاندارد دستک">
+                                        <div class="standard-diagram-caption">نقشه استاندارد دستک</div>
+                                        <div class="standard-diagram-legend">
+                                            1- دستک 90<br>
+                                            2- دستک 140<br>
+                                            3- دستک 180
+                                        </div>
+                                    </div>`;
+                                } else if (productType.includes('دیسک')) {
+                                    html += `
+                                    <div class="standard-diagram">
+                                        <img src="https://i.postimg.cc/KvJnDpW5/diskpic.jpg" alt="نقشه استاندارد دیسک">
+                                        <div class="standard-diagram-caption">نقشه استاندارد دیسک</div>
+                                        <div class="standard-diagram-legend">
+                                            1- دیسک 80<br>
+                                            2- دیسک 120<br>
+                                            3- دیسک 160<br>
+                                            4- دیسک 210
+                                        </div>
+                                    </div>`;
+                                } else {
+                                    // Original code for کلاهک products
+                                    html += `
+                                    <div class="standard-diagram">
+                                        <img src="https://i.postimg.cc/dV70PMZV/cappicture.png" alt="نقشه استاندارد">
+                                        <div class="standard-diagram-caption">نقشه استاندارد</div>
+                                        <div class="standard-diagram-legend">
+                                            1- کلاهک 90<br>
+                                            2- کلاهک 140<br>
+                                            3- کلاهک 180<br>
+                                            4- کلاهک 210
+                                        </div>
+                                    </div>`;
+                                }
+                            }
+                            
+                        if (submission.secondary_reviewer_data.dimensional_test) {
+                            html += `<div class="section-title">نتایج تست ابعاد</div>
+                                <div class="table-container">
+                                    <table class="measurement-table">
+                                        <thead>
+                                            <tr>
+                                                <th>شماره نمونه</th>
+                                                <th>A</th>
+                                                <th>B</th>
+                                                <th>C</th>
+                                                <th>D</th>
+                                                <th>E</th>
+                                                <th>F</th>
+                                                <th>G</th>
+                                                <th>H</th>
+                                                <th>I</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>`;
+                            
+                            for (let i = 0; i < submission.secondary_reviewer_data.dimensional_test.length; i++) {
+                                const row = submission.secondary_reviewer_data.dimensional_test[i];
+                                html += `<tr><td>${i + 1}</td>`;
+                                
+                                for (let colName in row) {
+                                    const value = row[colName];
+                                    let className = '';
+                                    
+                                    // Apply out of range styling for columns A, B, C, D based on product type
+                                    if (['A', 'B', 'C', 'D'].includes(colName)) {
+                                        // Get the specific ranges for this product type
+                                        const standardRanges = productStandardRanges[productType] || productStandardRanges['کلاهک'];
+                                        
+                                        if (standardRanges[colName] && (value < standardRanges[colName].min || value > standardRanges[colName].max)) {
+                                            className = 'out-of-range';
+                                        }
+                                    }
+                                    
+                                    html += `<td class="${className}">${value}</td>`;
+                                }
+                                
+                                html += `</tr>`;
+                            }
+                            
+                            html += `</tbody></table></div>`;
+                        }
+                        
+                        if (submission.secondary_reviewer_data.template_report) {
+                            const templateSectionClass = requiresTemplateReport ? 'required-test-section' : '';
+                            const templateTitleClass = requiresTemplateReport ? 'required-test-title' : 'section-title';
+                            
+                            html += `<div class="${templateSectionClass}">
+                                <div class="${templateTitleClass}">نتایج گزارش شابلون</div>
+                                <div class="table-container">
+                                    <table class="measurement-table">
+                                        <thead>
+                                            <tr>
+                                                <th>شماره نمونه</th>
+                                                <th>قالب 1</th>
+                                                <th>قالب 2</th>
+                                                <th>قالب 3</th>
+                                                <th>قالب 4</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>`;
+                            
+                            for (let i = 0; i < submission.secondary_reviewer_data.template_report.length; i++) {
+                                const row = submission.secondary_reviewer_data.template_report[i];
+                                html += `<tr><td>${i + 1}</td>`;
+                                
+                                for (let colIndex = 1; colIndex <= 4; colIndex++) {
+                                    const colValue = row[colIndex] || '';
+                                    const value = colValue === 'okay' ? 'مناسب' : 'نامناسب';
+                                    const className = colValue === 'okay' ? 'test-result-passed' : 'test-result-failed';
+                                    html += `<td class="${className}">${value}</td>`;
+                                }
+                                
+                                html += `</tr>`;
+                            }
+                            
+                            html += `</tbody></table></div>
+                            ${requiresTemplateReport ? '</div>' : ''}`;
+                        }
+                        
+                        if (submission.secondary_reviewer_data.galvanized_test) {
+                            const galvSectionClass = requiresGalvanizedTest ? 'required-test-section' : '';
+                            const galvTitleClass = requiresGalvanizedTest ? 'required-test-title' : 'section-title';
+                            
+                            html += `<div class="${galvSectionClass}">
+                                <div class="${galvTitleClass}">نتایج تست گالوانیزه</div>
+                                <div class="table-container">
+                                    <table class="measurement-table">
+                                        <thead>
+                                            <tr>
+                                                <th>شماره نمونه</th>
+                                                <th>تست 1</th>
+                                                <th>تست 2</th>
+                                                <th>تست 3</th>
+                                                <th>تست 4</th>
+                                                <th>تست 5</th>
+                                                <th>میانگین</th>
+                                                <th>نتیجه</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>`;
+                            
+                            // Calculate the average for displayed results
+                            let totalSum = 0;
+                            let valueCount = 0;
+                            let anyLessThan80 = false;
+                            
+                            for (let i = 0; i < submission.secondary_reviewer_data.galvanized_test.length; i++) {
+                                const row = submission.secondary_reviewer_data.galvanized_test[i];
+                                html += `<tr><td>${i + 1}</td>`;
+                                
+                                // Process each cell in the row
+                                let rowSum = 0;
+                                let rowCount = 0;
+                                
+                                for (let colIndex = 1; colIndex <= 5; colIndex++) {
+                                    const value = parseFloat(row[colIndex]);
+                                    const className = value < 80 ? 'out-of-range' : '';
+                                    
+                                    if (!isNaN(value)) {
+                                        totalSum += value;
+                                        valueCount++;
+                                        rowSum += value;
+                                        rowCount++;
+                                        
+                                        if (value < 80) {
+                                            anyLessThan80 = true;
+                                        }
+                                    }
+                                    
+                                    html += `<td class="${className}">${value}</td>`;
+                                }
+                                
+                                // Display stored average or calculate it if not available
+                                let rowAverage;
+                                if (row.average) {
+                                    rowAverage = row.average;
+                                } else {
+                                    rowAverage = rowCount > 0 ? (rowSum / rowCount).toFixed(2) : '-';
+                                }
+                                
+                                // Add the average column with highlighting
+                                html += `<td class="highlight-average">${rowAverage}</td>`;
+                                
+                                // Add the result column
+                                const rowResult = row.result === 'okay' ? 'مناسب' : 'نامناسب';
+                                const resultClass = row.result === 'okay' ? 'test-result-passed' : 'test-result-failed';
+                                html += `<td class="${resultClass}">${rowResult}</td></tr>`;
+                            }
+                            
+                            // Calculate average and overall result
+                            const average = valueCount > 0 ? (totalSum / valueCount).toFixed(2) : 0;
+                            const overallResult = (anyLessThan80 || average < 100) ? 'نامناسب' : 'مناسب';
+                            const overallClass = overallResult === 'مناسب' ? 'test-result-passed' : 'test-result-failed';
+                            
+                            html += `</tbody></table>
+                                <div class="galv-summary">
+                                    <strong>میانگین کلی:</strong> ${average} | 
+                                    <strong>نتیجه نهایی:</strong> <span class="${overallClass}">${overallResult}</span>
+                                </div>
+                            </div>`;
+                        }
+                    } else if (productCategory === 'دستک' || productCategory === 'اشپیل') {
+                        html += `
+                            <div class="data-display">
+                                <div class="data-section">
+                                    <h4>اطلاعات کلی</h4>
+                                    <p><span class="data-label">نتیجه بررسی کیفیت:</span> <span class="data-value">${submission.secondary_reviewer_data.quality_check || 'ثبت نشده'}</span></p>
+                                    <p><span class="data-label">وضعیت بسته بندی:</span> <span class="data-value">${submission.secondary_reviewer_data.packaging_status || 'ثبت نشده'}</span></p>
+                                    <p><span class="data-label">شماره ورود:</span> <span class="data-value">${submission.secondary_reviewer_data.arrival_number || 'ثبت نشده'}</span></p>
+                                    <p><span class="data-label">کد انبار:</span> <span class="data-value">${submission.secondary_reviewer_data.storage_code || 'ثبت نشده'}</span></p>
+                                </div>
+                            </div>`;
+                            
+                        if (submission.secondary_reviewer_data.dimensional_test) {
+                            // Get the specific ranges for this product type
+                            const standardRanges = productStandardRanges[productType] || productStandardRanges[productCategory];
+                            
+                            // Display standards table for reference
+                            html += `
+                                <div class="section-title">استانداردهای اندازه گیری</div>
+                                <div class="standards-caption">مقادیر استاندارد برای محصول ${productType}</div>
+                                <table class="standards-table">
+                                    <thead>
+                                        <tr>
+                                            <th>بعد</th>
+                                            <th>حداقل مجاز</th>
+                                            <th>حداکثر مجاز</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="dimension-label">A</td>
+                                            <td class="range-value">${standardRanges.A.min}</td>
+                                            <td class="range-value">${standardRanges.A.max}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>`;
+                                
+                                // Add standard diagram for specific products (unlikely but just in case)
+                                if (shouldShowDiagram) {
+                                // Check if the product is اشپیل (Shpeil)
+                                if (productType.includes('اشپیل')) {
+                                    html += `
+                                    <div class="standard-diagram">
+                                        <img src="https://i.postimg.cc/MprdHBGY/shpeilpic.jpg" alt="نقشه استاندارد اشپیل">
+                                        <div class="standard-diagram-caption">نقشه استاندارد اشپیل</div>
+                                        <div class="standard-diagram-legend">
+                                            1- اشپیل 16<br>
+                                            2- اشپیل 20
+                                        </div>
+                                    </div>`;
+                                } else if (productType.includes('دستک')) {
+                                    html += `
+                                    <div class="standard-diagram">
+                                        <img src="https://i.postimg.cc/kXcyhg2K/pinpic.jpg" alt="نقشه استاندارد دستک">
+                                        <div class="standard-diagram-caption">نقشه استاندارد دستک</div>
+                                        <div class="standard-diagram-legend">
+                                            1- دستک 90<br>
+                                            2- دستک 140<br>
+                                            3- دستک 180
+                                        </div>
+                                    </div>`;
+                                } else if (productType.includes('دیسک')) {
+                                    html += `
+                                    <div class="standard-diagram">
+                                        <img src="https://i.postimg.cc/KvJnDpW5/diskpic.jpg" alt="نقشه استاندارد دیسک">
+                                        <div class="standard-diagram-caption">نقشه استاندارد دیسک</div>
+                                        <div class="standard-diagram-legend">
+                                            1- دیسک 80<br>
+                                            2- دیسک 120<br>
+                                            3- دیسک 160<br>
+                                            4- دیسک 210
+                                        </div>
+                                    </div>`;
+                                } else {
+                                    // Original code for کلاهک products
+                                    html += `
+                                    <div class="standard-diagram">
+                                        <img src="https://i.postimg.cc/dV70PMZV/cappicture.png" alt="نقشه استاندارد">
+                                        <div class="standard-diagram-caption">نقشه استاندارد</div>
+                                        <div class="standard-diagram-legend">
+                                            1- کلاهک 90<br>
+                                            2- کلاهک 140<br>
+                                            3- کلاهک 180<br>
+                                            4- کلاهک 210
+                                        </div>
+                                    </div>`;
+                                }
+                                }
+                            
+                            html += `<div class="section-title">نتایج تست ابعاد</div>
+                                <div class="table-container">
+                                    <table class="measurement-table">
+                                        <thead>
+                                            <tr>
+                                                <th>شماره نمونه</th>
+                                                <th>A</th>
+                                                <th>B</th>
+                                                <th>C</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>`;
+                            
+                            for (let i = 0; i < submission.secondary_reviewer_data.dimensional_test.length; i++) {
+                                const row = submission.secondary_reviewer_data.dimensional_test[i];
+                                html += `<tr><td>${i + 1}</td>`;
+                                
+                                for (let colName in row) {
+                                    if (['A', 'B', 'C'].includes(colName)) {
+                                        const value = row[colName];
+                                        let className = '';
+                                        
+                                        // Apply out of range styling for column A
+                                        if (colName === 'A') {
+                                            if (value < standardRanges[colName].min || value > standardRanges[colName].max) {
+                                                className = 'out-of-range';
+                                            }
+                                        }
+                                        
+                                        html += `<td class="${className}">${value}</td>`;
+                                    }
+                                }
+                                
+                                html += `</tr>`;
+                            }
+                            
+                            html += `</tbody></table></div>`;
+                        }
+                        
+                        // Show template report results if available and if this was a required product
+                        if (requiresTemplateReport && submission.secondary_reviewer_data.template_report) {
+                            html += `<div class="required-test-section">
+                                <div class="required-test-title">نتایج گزارش شابلون</div>
+                                <div class="table-container">
+                                    <table class="measurement-table">
+                                        <thead>
+                                            <tr>
+                                                <th>شماره نمونه</th>
+                                                <th>قالب 1</th>
+                                                <th>قالب 2</th>
+                                                <th>قالب 3</th>
+                                                <th>قالب 4</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>`;
+                            
+                            for (let i = 0; i < submission.secondary_reviewer_data.template_report.length; i++) {
+                                const row = submission.secondary_reviewer_data.template_report[i];
+                                html += `<tr><td>${i + 1}</td>`;
+                                
+                                for (let colIndex = 1; colIndex <= 4; colIndex++) {
+                                    const colValue = row[colIndex] || '';
+                                    const value = colValue === 'okay' ? 'مناسب' : 'نامناسب';
+                                    const className = colValue === 'okay' ? 'test-result-passed' : 'test-result-failed';
+                                    html += `<td class="${className}">${value}</td>`;
+                                }
+                                
+                                html += `</tr>`;
+                            }
+                            
+                            html += `</tbody></table></div></div>`;
+                        }
+                        
+                        // Show galvanized test results if available and if this was a required product
+                        if (requiresGalvanizedTest && submission.secondary_reviewer_data.galvanized_test) {
+                            html += `<div class="required-test-section">
+                                <div class="required-test-title">نتایج تست گالوانیزه</div>
+                                <div class="table-container">
+                                    <table class="measurement-table">
+                                        <thead>
+                                            <tr>
+                                                <th>شماره نمونه</th>
+                                                <th>تست 1</th>
+                                                <th>تست 2</th>
+                                                <th>تست 3</th>
+                                                <th>تست 4</th>
+                                                <th>تست 5</th>
+                                                <th>میانگین</th>
+                                                <th>نتیجه</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>`;
+                            
+                            // Calculate the average for displayed results
+                            let totalSum = 0;
+                            let valueCount = 0;
+                            let anyLessThan80 = false;
+                            
+                            for (let i = 0; i < submission.secondary_reviewer_data.galvanized_test.length; i++) {
+                                const row = submission.secondary_reviewer_data.galvanized_test[i];
+                                html += `<tr><td>${i + 1}</td>`;
+                                
+                                // Process each cell in the row
+                                let rowSum = 0;
+                                let rowCount = 0;
+                                
+                                for (let colIndex = 1; colIndex <= 5; colIndex++) {
+                                    const value = parseFloat(row[colIndex]);
+                                    const className = value < 80 ? 'out-of-range' : '';
+                                    
+                                    if (!isNaN(value)) {
+                                        totalSum += value;
+                                        valueCount++;
+                                        rowSum += value;
+                                        rowCount++;
+                                        
+                                        if (value < 80) {
+                                            anyLessThan80 = true;
+                                        }
+                                    }
+                                    
+                                    html += `<td class="${className}">${value}</td>`;
+                                }
+                                
+                                // Display stored average or calculate it if not available
+                                let rowAverage;
+                                if (row.average) {
+                                    rowAverage = row.average;
+                                } else {
+                                    rowAverage = rowCount > 0 ? (rowSum / rowCount).toFixed(2) : '-';
+                                }
+                                
+                                // Add the average column with highlighting
+                                html += `<td class="highlight-average">${rowAverage}</td>`;
+                                
+                                // Add the result column
+                                const rowResult = row.result === 'okay' ? 'مناسب' : 'نامناسب';
+                                const resultClass = row.result === 'okay' ? 'test-result-passed' : 'test-result-failed';
+                                html += `<td class="${resultClass}">${rowResult}</td></tr>`;
+                            }
+                            
+                            // Calculate average and overall result
+                            const average = valueCount > 0 ? (totalSum / valueCount).toFixed(2) : 0;
+                            const overallResult = (anyLessThan80 || average < 100) ? 'نامناسب' : 'مناسب';
+                            const overallClass = overallResult === 'مناسب' ? 'test-result-passed' : 'test-result-failed';
+                            
+                            html += `</tbody></table>
+                                <div class="galv-summary">
+                                    <strong>میانگین کلی:</strong> ${average} | 
+                                    <strong>نتیجه نهایی:</strong> <span class="${overallClass}">${overallResult}</span>
+                                </div>
+                            </div>`;
+                        }
+                    } else {
+                        html += `
+                            <div class="data-display">
+                                <div class="data-section">
+                                    <h4>اطلاعات کلی</h4>
+                                    <p><span class="data-label">نتیجه بررسی کیفیت:</span> <span class="data-value">${submission.secondary_reviewer_data.quality_check}</span></p>
+                                    <p><span class="data-label">وضعیت بسته بندی:</span> <span class="data-value">${submission.secondary_reviewer_data.packaging_status}</span></p>
+                                    <p><span class="data-label">خط تولید:</span> <span class="data-value">${submission.secondary_reviewer_data.production_line}</span></p>
+                                    <p><span class="data-label">کد تایید محصول:</span> <span class="data-value">${submission.secondary_reviewer_data.verification_code}</span></p>
+                                </div>
+                            </div>`;
+                    }
+                    
+                    // Show checkbox status if available
+                    if (submission.secondary_reviewer_data.lab_manager_checked || submission.secondary_reviewer_data.lab_supervisor_checked) {
+                        html += `
+                            <div class="data-display">
+                                <div class="section-title">تاییدیه های انجام شده</div>
+                                <p><span class="data-label">مدیر آزمایشگاه:</span> <span class="data-value">${submission.secondary_reviewer_data.lab_manager_checked ? 'تایید شده ✓' : 'تایید نشده ✗'}</span></p>
+                                <p><span class="data-label">مسئول آزمایشگاه:</span> <span class="data-value">${submission.secondary_reviewer_data.lab_supervisor_checked ? 'تایید شده ✓' : 'تایید نشده ✗'}</span></p>
+                            </div>`;
+                    }
+                    
+                    html += `
+                            <div class="data-display">
+                                <p><span class="data-label">توضیحات تکمیلی:</span> <span class="data-value">${submission.secondary_reviewer_data.comment || 'بدون توضیح'}</span></p>
+                                <p><span class="data-label">تاریخ ارسال:</span> <span class="data-value">${new Date(submission.acknowledged_timestamp * 1000).toLocaleString('fa-IR')}</span></p>
+                            </div>
+                        </div>`;
+                }
+                
+                html += `</div>`;
+            });
+            
+            container.innerHTML = html;
+
+            // Initialize any Persian date pickers after rendering
+            submissions.forEach(submission => {
+                if (!submission.hasOwnProperty('acknowledged') || !submission.acknowledged) {
+                    const dateInputId = `persian-date-${submission.id}`;
+                    const dateInput = document.getElementById(dateInputId);
+                    
+                    if (dateInput) {
+                        // Initialize Persian date picker if jQuery and the plugin are available
+                        if (typeof $ !== 'undefined' && $.fn.persianDatepicker) {
+                            $(dateInput).persianDatepicker({
+                                format: 'YYYY/MM/DD',
+                                autoClose: true
+                            });
+                        }
+                    }
+
+                    // Add event listeners for dimensional test inputs
+                    const productType = submission.A;
+                    const productCategory = productTypeCategories[productType] || productType;
+                    const requiresGalvanizedTest = galvanizedTestRequired.includes(productType);
+                    const requiresTemplateReport = templateReportRequired.includes(productType);
+                    
+                    if (productCategory === 'کلاهک' || productCategory === 'دیسک' || 
+                        (requiresGalvanizedTest && (productCategory === 'دستک' || productCategory === 'اشپیل'))) {
+                        const inputs = document.querySelectorAll(`.dimension-input[id^="dim-${submission.id}"]`);
+                        inputs.forEach(input => {
+                            input.addEventListener('change', function() {
+                                validateDimensionalInput(this);
+                            });
+                        });
+                        
+                        // Add event listeners for galvanized test inputs
+                        const galvInputs = document.querySelectorAll(`.galvanized-input[data-submissionid="${submission.id}"]`);
+                        galvInputs.forEach(input => {
+                            input.addEventListener('input', function() {
+                                validateGalvanizedInput(this);
+                                updateGalvanizedResults(submission.id);
+                            });
+                        });
+                    } else if (productCategory === 'دستک' || productCategory === 'اشپیل') {
+                        const inputs = document.querySelectorAll(`.dimension-input[id^="dim-${submission.id}"]`);
+                        inputs.forEach(input => {
+                            input.addEventListener('change', function() {
+                                validateDimensionalInput(this);
+                            });
+                        });
+                    }
+                    
+                    // Add event listeners for template report selects - with instant color feedback
+                    if (requiresTemplateReport) {
+                        const templateSelects = document.querySelectorAll(`.template-select[data-submissionid="${submission.id}"]`);
+                        templateSelects.forEach(select => {
+                            select.addEventListener('change', function() {
+                                validateTemplateSelect(this);
+                                
+                                // Apply instant color feedback
+                                const parentCell = this.parentElement;
+                                if (this.value === 'okay') {
+                                    parentCell.classList.remove('select-inappropriate');
+                                    parentCell.classList.add('select-appropriate');
+                                } else if (this.value === 'not-okay') {
+                                    parentCell.classList.remove('select-appropriate');
+                                    parentCell.classList.add('select-inappropriate');
+                                } else {
+                                    parentCell.classList.remove('select-appropriate', 'select-inappropriate');
+                                }
+                            });
+                        });
+                    }
+                }
+            });
+        }
+
+        function validateDimensionalInput(input) {
+            const col = input.getAttribute('data-col');
+            const productType = input.getAttribute('data-product');
+            const value = parseFloat(input.value);
+            
+            // Get the standard ranges for this product type
+            const standardRanges = productStandardRanges[productType] || productStandardRanges['کلاهک'];
+            
+            // Only validate columns A, B, C, D
+            if (['A', 'B', 'C', 'D'].includes(col) && !isNaN(value)) {
+                if (standardRanges[col] && (value < standardRanges[col].min || value > standardRanges[col].max)) {
+                    input.style.backgroundColor = '#ffcccc'; // Light red for out of range
+                } else {
+                    input.style.backgroundColor = ''; // Reset background
+                }
+            }
+        }
+
+        function validateGalvanizedInput(input) {
+            const value = parseFloat(input.value);
+            const isRequired = input.getAttribute('data-required') === 'true';
+            
+            // Check if the value is less than 80 (minimum required value)
+            if (!isNaN(value) && value < 80) {
+                input.classList.add('galv-input-invalid');
+            } else {
+                input.classList.remove('galv-input-invalid');
+            }
+            
+            // Mark empty inputs as invalid if they are required
+            if (isRequired && (input.value === '' || input.value === null)) {
+                input.classList.add('galv-input-invalid');
+            }
+        }
+        
+        function validateTemplateSelect(select) {
+            const isRequired = select.getAttribute('data-required') === 'true';
+            
+            // Mark empty selects as invalid if they are required
+            if (isRequired && (select.value === '' || select.value === null)) {
+                select.style.backgroundColor = '#ffcccc'; // Light red for invalid
+            } else {
+                select.style.backgroundColor = ''; // Reset background
+            }
+        }
+
+        function updateGalvanizedResults(submissionId) {
+            // Get all inputs for this submission
+            const inputs = document.querySelectorAll(`.galvanized-input[data-submissionid="${submissionId}"]`);
+            const rows = [];
+            let totalSum = 0;
+            let valueCount = 0;
+            
+            // Group inputs by row
+            inputs.forEach(input => {
+                const row = parseInt(input.getAttribute('data-row'));
+                const col = input.getAttribute('data-col');
+                const value = parseFloat(input.value);
+                
+                if (!rows[row]) {
+                    rows[row] = { values: {}, anyLessThan80: false };
+                }
+                
+                if (!isNaN(value)) {
+                    rows[row].values[col] = value;
+                    totalSum += value;
+                    valueCount++;
+                    
+                    if (value < 80) {
+                        rows[row].anyLessThan80 = true;
+                    }
+                }
+            });
+            
+            // Update result for each row
+            rows.forEach((row, index) => {
+                if (Object.keys(row.values).length > 0) {
+                    // Calculate row average
+                    const rowValues = Object.values(row.values);
+                    const rowSum = rowValues.reduce((acc, val) => acc + val, 0);
+                    const rowAverage = rowValues.length > 0 ? (rowSum / rowValues.length).toFixed(2) : 0;
+                    
+                    // Update the average cell
+                    const averageElement = document.getElementById(`galv-average-${submissionId}-${index}`);
+                    if (averageElement) {
+                        averageElement.textContent = rowAverage;
+                    }
+                    
+                    // Update the result cell
+                    const resultElement = document.getElementById(`galv-result-${submissionId}-${index}`);
+                    const result = row.anyLessThan80 ? 'نامناسب' : 'مناسب';
+                    const resultClass = row.anyLessThan80 ? 'test-result-failed' : 'test-result-passed';
+                    
+                    if (resultElement) {
+                        resultElement.textContent = result;
+                        resultElement.className = resultClass;
+                    }
+                }
+            });
+            
+            // Calculate average and update summary
+            const summaryElement = document.getElementById(`galv-summary-${submissionId}`);
+            if (summaryElement) {
+                const average = valueCount > 0 ? (totalSum / valueCount).toFixed(2) : 0;
+                const anyRowLessThan80 = rows.some(row => row && row.anyLessThan80);
+                const overallResult = (anyRowLessThan80 || average < 100) ? 'نامناسب' : 'مناسب';
+                const overallClass = overallResult === 'مناسب' ? 'test-result-passed' : 'test-result-failed';
+                
+                summaryElement.innerHTML = `
+                    <strong>میانگین کلی:</strong> ${average} | 
+                    <strong>نتیجه نهایی:</strong> <span class="${overallClass}">${overallResult}</span>
+                `;
+            }
+        }
+
+        function acknowledgeSubmission(id) {
+            const submissionItem = document.getElementById(`submission-${id}`);
+            const productType = submissionItem.getAttribute('data-product-type');
+            const requiresGalvanizedTest = submissionItem.getAttribute('data-requires-galvanized') === 'true';
+            const requiresTemplateReport = submissionItem.getAttribute('data-requires-template') === 'true';
+            
+            // Get the product category
+            const productCategory = productTypeCategories[productType] || productType;
+            
+            // Common fields
+            const comment = document.getElementById(`comment-${id}`).value.trim();
+            const errorMessage = document.getElementById(`error-message-${id}`);
+            
+            // Check required comment
+            if (!comment) {
+                errorMessage.textContent = 'لطفا توضیحات تکمیلی را وارد کنید';
+                errorMessage.style.display = 'block';
+                return;
+            }
+            
+            // Check required checkboxes
+            const labManagerChecked = document.getElementById(`lab-manager-${id}`).checked;
+            const labSupervisorChecked = document.getElementById(`lab-supervisor-${id}`).checked;
+            
+            if (!labManagerChecked || !labSupervisorChecked) {
+                errorMessage.textContent = 'لطفا تاییدیه های مدیر آزمایشگاه و مسئول آزمایشگاه را تکمیل کنید';
+                errorMessage.style.display = 'block';
+                return;
+            }
+            
+            // Get additional data values based on product category
+            let additionalData = {};
+            let isValid = true;
+            
+            if (productCategory === 'کلاهک' || productCategory === 'دیسک') {
+                const packagingStatus = document.getElementById(`packaging-status-${id}`).value.trim();
+                const manufacturerName = document.getElementById(`manufacturer-name-${id}`).value.trim();
+                const arrivalNumber = document.getElementById(`arrival-number-${id}`).value.trim();
+                const storageCode = document.getElementById(`storage-code-${id}`).value.trim();
+                const persianDate = document.getElementById(`persian-date-${id}`).value.trim();
+                
+                // Check required fields
+                if (!packagingStatus || !manufacturerName || !arrivalNumber || !storageCode || !persianDate) {
+                    isValid = false;
+                }
+                
+                // Collect dimensional test data
+                const dimensionalTest = [];
+                for (let rowIndex = 0; rowIndex < 10; rowIndex++) {
+                    const rowData = {};
+                    let hasData = false;
+                    
+                    for (let colIndex = 0; colIndex < 9; colIndex++) {
+                        const colName = String.fromCharCode(65 + colIndex); // A, B, C, ...
+                        const inputId = `dim-${id}-${rowIndex}-${colName}`;
+                        const input = document.getElementById(inputId);
+                        
+                        if (input && input.value.trim() !== '') {
+                            rowData[colName] = parseFloat(input.value);
+                            hasData = true;
+                        } else {
+                            rowData[colName] = '';
+                        }
+                        
+                        // Check required dimensions (A, B, C, D) for each row that has any data
+                        if (hasData && ['A', 'B', 'C', 'D'].includes(colName) && rowData[colName] === '') {
+                            isValid = false;
+                        }
+                    }
+                    
+                    if (hasData) {
+                        dimensionalTest.push(rowData);
+                    }
+                }
+                
+                // Check if at least one row of dimensional test data is provided
+                if (dimensionalTest.length === 0) {
+                    isValid = false;
+                }
+                
+                // Collect template report data
+                const templateReport = [];
+                let templateReportValid = !requiresTemplateReport; // Only fail validation if required and no data
+                
+                for (let rowIndex = 0; rowIndex < 10; rowIndex++) {
+                    const rowData = {};
+                    let hasData = false;
+                    
+                    for (let colIndex = 1; colIndex <= 4; colIndex++) {
+                        const selectId = `templ-${id}-${rowIndex}-${colIndex}`;
+                        const select = document.getElementById(selectId);
+                        
+                        if (select && select.value !== '') {
+                            rowData[colIndex] = select.value;
+                            hasData = true;
+                        } else {
+                            rowData[colIndex] = '';
+                        }
+                    }
+                    
+                    if (hasData) {
+                        templateReport.push(rowData);
+                        templateReportValid = true;
+                    }
+                }
+                
+                // If template report is required but has no data, fail validation
+                if (requiresTemplateReport && templateReport.length === 0) {
+                    isValid = false;
+                    templateReportValid = false;
+                    errorMessage.textContent = 'برای محصول ' + productType + ' گزارش شابلون الزامی است';
+                    errorMessage.style.display = 'block';
+                }
+                
+                // Collect galvanized test data
+                const galvanizedTest = [];
+                let galvanizedValid = !requiresGalvanizedTest; // Only fail validation if required and no data
+                
+                for (let rowIndex = 0; rowIndex < 10; rowIndex++) {
+                    const rowData = {};
+                    let hasData = false;
+                    let anyLessThan80 = false;
+                    
+                    for (let colIndex = 1; colIndex <= 5; colIndex++) {
+                        const inputId = `galv-${id}-${rowIndex}-${colIndex}`;
+                        const input = document.getElementById(inputId);
+                        
+                        if (input && input.value.trim() !== '') {
+                            const value = parseFloat(input.value);
+                            rowData[colIndex] = value;
+                            hasData = true;
+                            
+                            if (value < 80) {
+                                anyLessThan80 = true;
+                            }
+                        } else {
+                            rowData[colIndex] = '';
+                        }
+                    }
+                    
+                    // Add the result for this row
+                    if (hasData) {
+                        // Calculate average for this row
+                        let rowSum = 0;
+                        let rowCount = 0;
+                        
+                        for (let colIndex = 1; colIndex <= 5; colIndex++) {
+                            const value = parseFloat(rowData[colIndex]);
+                            if (!isNaN(value)) {
+                                rowSum += value;
+                                rowCount++;
+                            }
+                        }
+                        
+                        // Add average to the row data
+                        rowData['average'] = rowCount > 0 ? (rowSum / rowCount).toFixed(2) : '';
+                        
+                        // Determine result for this row based on values
+                        rowData['result'] = anyLessThan80 ? 'not-okay' : 'okay';
+                        galvanizedTest.push(rowData);
+                        galvanizedValid = true;
+                    }
+                }
+                
+                // Check for overall average < 100
+                if (galvanizedValid && galvanizedTest.length > 0) {
+                    let totalValues = 0;
+                    let totalCount = 0;
+                    
+                    galvanizedTest.forEach(row => {
+                        for (const key in row) {
+                            if (key !== 'result' && key !== 'average' && row[key] !== '') {
+                                totalValues += parseFloat(row[key]);
+                                totalCount++;
+                            }
+                        }
+                    });
+                    
+                    const average = totalCount > 0 ? totalValues / totalCount : 0;
+                    
+                    // If average < 100, mark all results as not-okay
+                    if (average < 100) {
+                        galvanizedTest.forEach(row => {
+                            row['result'] = 'not-okay';
+                        });
+                    }
+                }
+                
+                // If required but no data, then fail validation
+                if (requiresGalvanizedTest && galvanizedTest.length === 0) {
+                    isValid = false;
+                    galvanizedValid = false;
+                    errorMessage.textContent = 'برای محصول ' + productType + ' تست گالوانیزه الزامی است';
+                    errorMessage.style.display = 'block';
+                }
+                
+                additionalData = {
+                    packaging_status: packagingStatus,
+                    manufacturer_name: manufacturerName,
+                    arrival_number: arrivalNumber,
+                    storage_code: storageCode,
+                    persian_date: persianDate,
+                    dimensional_test: dimensionalTest,
+                    template_report: templateReport,
+                    galvanized_test: galvanizedTest,
+                    quality_check: 'N/A',
+                    production_line: 'N/A',
+                    verification_code: 'N/A',
+                    comment: comment,
+                    lab_manager_checked: labManagerChecked,
+                    lab_supervisor_checked: labSupervisorChecked
+                };
+                
+            } else if (productCategory === 'دستک' || productCategory === 'اشپیل') {
+                const qualityCheck = document.getElementById(`quality-check-${id}`).value.trim();
+                const packagingStatus = document.getElementById(`packaging-status-${id}`).value.trim();
+                const arrivalNumber = document.getElementById(`arrival-number-${id}`).value.trim();
+                const storageCode = document.getElementById(`storage-code-${id}`).value.trim();
+                
+                if (!qualityCheck || !packagingStatus || !arrivalNumber || !storageCode) {
+                    isValid = false;
+                }
+                
+                // Collect dimensional test data
+                const dimensionalTest = [];
+                for (let rowIndex = 0; rowIndex < 10; rowIndex++) {
+                    const rowData = {};
+                    let hasData = false;
+                    
+                    for (let colIndex = 0; colIndex < 3; colIndex++) {
+                        const colName = String.fromCharCode(65 + colIndex); // A, B, C
+                        const inputId = `dim-${id}-${rowIndex}-${colName}`;
+                        const input = document.getElementById(inputId);
+                        
+                        if (input && input.value.trim() !== '') {
+                            rowData[colName] = parseFloat(input.value);
+                            hasData = true;
+                        } else {
+                            rowData[colName] = '';
+                        }
+                        
+                        // Check required dimension (A) for each row that has any data
+                        if (hasData && colName === 'A' && rowData[colName] === '') {
+                            isValid = false;
+                        }
+                    }
+                    
+                    if (hasData) {
+                        dimensionalTest.push(rowData);
+                    }
+                }
+                
+                // Check if at least one row of dimensional test data is provided
+                if (dimensionalTest.length === 0) {
+                    isValid = false;
+                }
+                
+                // For دستک that requires template report
+                let templateReport = [];
+                let templateReportValid = !requiresTemplateReport; // Only fail validation if required and no data
+                
+                if (requiresTemplateReport) {
+                    // Collect template report data
+                    for (let rowIndex = 0; rowIndex < 10; rowIndex++) {
+                        const rowData = {};
+                        let hasData = false;
+                        
+                        for (let colIndex = 1; colIndex <= 4; colIndex++) {
+                            const selectId = `templ-${id}-${rowIndex}-${colIndex}`;
+                            const select = document.getElementById(selectId);
+                            
+                            if (select && select.value !== '') {
+                                rowData[colIndex] = select.value;
+                                hasData = true;
+                            } else {
+                                rowData[colIndex] = '';
+                            }
+                        }
+                        
+                        if (hasData) {
+                            templateReport.push(rowData);
+                            templateReportValid = true;
+                        }
+                    }
+                    
+                    // If template report is required but has no data, fail validation
+                    if (templateReport.length === 0) {
+                        isValid = false;
+                        templateReportValid = false;
+                        errorMessage.textContent = 'برای محصول ' + productType + ' گزارش شابلون الزامی است';
+                        errorMessage.style.display = 'block';
+                    }
+                }
+                
+                // For دستک that requires galvanized test
+                let galvanizedTest = [];
+                let galvanizedValid = !requiresGalvanizedTest; // Only fail validation if required and no data
+                
+                if (requiresGalvanizedTest) {
+                    // Collect galvanized test data
+                    for (let rowIndex = 0; rowIndex < 10; rowIndex++) {
+                        const rowData = {};
+                        let hasData = false;
+                        let anyLessThan80 = false;
+                        
+                        for (let colIndex = 1; colIndex <= 5; colIndex++) {
+                            const inputId = `galv-${id}-${rowIndex}-${colIndex}`;
+                            const input = document.getElementById(inputId);
+                            
+                            if (input && input.value.trim() !== '') {
+                                const value = parseFloat(input.value);
+                                rowData[colIndex] = value;
+                                hasData = true;
+                                
+                                if (value < 80) {
+                                    anyLessThan80 = true;
+                                }
+                            } else {
+                                rowData[colIndex] = '';
+                            }
+                        }
+                        
+                        // Add the result for this row
+                        if (hasData) {
+                            // Calculate average for this row
+                            let rowSum = 0;
+                            let rowCount = 0;
+                            
+                            for (let colIndex = 1; colIndex <= 5; colIndex++) {
+                                const value = parseFloat(rowData[colIndex]);
+                                if (!isNaN(value)) {
+                                    rowSum += value;
+                                    rowCount++;
+                                }
+                            }
+                            
+                            // Add average to the row data
+                            rowData['average'] = rowCount > 0 ? (rowSum / rowCount).toFixed(2) : '';
+                            
+                            // Determine result for this row based on values
+                            rowData['result'] = anyLessThan80 ? 'not-okay' : 'okay';
+                            galvanizedTest.push(rowData);
+                            galvanizedValid = true;
+                        }
+                    }
+                    
+                    // Check for overall average < 100
+                    if (galvanizedValid && galvanizedTest.length > 0) {
+                        let totalValues = 0;
+                        let totalCount = 0;
+                        
+                        galvanizedTest.forEach(row => {
+                            for (const key in row) {
+                                if (key !== 'result' && key !== 'average' && row[key] !== '') {
+                                    totalValues += parseFloat(row[key]);
+                                    totalCount++;
+                                }
+                            }
+                        });
+                        
+                        const average = totalCount > 0 ? totalValues / totalCount : 0;
+                        
+                        // If average < 100, mark all results as not-okay
+                        if (average < 100) {
+                            galvanizedTest.forEach(row => {
+                                row['result'] = 'not-okay';
+                            });
+                        }
+                    }
+                    
+                    // If required but no data, then fail validation
+                    if (galvanizedTest.length === 0) {
+                        isValid = false;
+                        galvanizedValid = false;
+                        errorMessage.textContent = 'برای محصول ' + productType + ' تست گالوانیزه الزامی است';
+                        errorMessage.style.display = 'block';
+                    }
+                }
+                
+                additionalData = {
+                    quality_check: qualityCheck,
+                    packaging_status: packagingStatus,
+                    arrival_number: arrivalNumber,
+                    storage_code: storageCode,
+                    dimensional_test: dimensionalTest,
+                    template_report: requiresTemplateReport ? templateReport : [],
+                    galvanized_test: requiresGalvanizedTest ? galvanizedTest : [],
+                    production_line: 'N/A',
+                    verification_code: 'N/A',
+                    comment: comment,
+                    lab_manager_checked: labManagerChecked,
+                    lab_supervisor_checked: labSupervisorChecked
+                };
+                
+            } else {
+                // Default - all fields required
+                const qualityCheck = document.getElementById(`quality-check-${id}`).value.trim();
+                const packagingStatus = document.getElementById(`packaging-status-${id}`).value.trim();
+                const productionLine = document.getElementById(`production-line-${id}`).value.trim();
+                const verificationCode = document.getElementById(`verification-code-${id}`).value.trim();
+                
+                if (!qualityCheck || !packagingStatus || !productionLine || !verificationCode) {
+                    isValid = false;
+                }
+                
+                additionalData = {
+                    quality_check: qualityCheck,
+                    packaging_status: packagingStatus,
+                    production_line: productionLine,
+                    verification_code: verificationCode,
+                    comment: comment,
+                    lab_manager_checked: labManagerChecked,
+                    lab_supervisor_checked: labSupervisorChecked
+                };
+            }
+            
+            if (!isValid) {
+                if (!errorMessage.textContent || errorMessage.textContent === '') {
+                    errorMessage.textContent = 'لطفا تمامی فیلدهای الزامی را تکمیل کنید';
+                }
+                errorMessage.style.display = 'block';
+                return;
+            } else {
+                errorMessage.style.display = 'none';
+            }
+            
+            // Create the payload object with the correct structure
+            const payload = {
+                timestamp: Math.floor(Date.now() / 1000),
+                additional_data: additionalData
+            };
+            
+            // Debug: log the payload to console to ensure it's correctly structured
+            console.log("Sending payload:", payload);
+            
+            fetch(`/reviewer/acknowledge_submission/${id}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(data => {
+                        throw new Error(data.message || 'Error acknowledging submission');
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.status === 'success') {
+                    alert('دریافت داده تایید شد و به همراه داده‌های تکمیلی به بررسی کننده اولیه ارسال شد');
+                    fetchSubmissions(); // Refresh the list
+                } else {
+                    alert('خطا: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error acknowledging submission:', error);
+                alert('خطا در تایید دریافت: ' + error.message);
+            });
+        }
+    </script>
+</body>
+</html>

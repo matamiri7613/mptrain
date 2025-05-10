@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Picture and Table Page</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #ffffff; /* Plain white background */
+            font-family: 'B Nazanin', 'Times New Roman', serif;
+            position: relative; /* Added for positioning the button */
+        }
+        .content-container {
+            text-align: center;
+        }
+        .content-container img {
+            width: 400px; /* Adjust the size of the picture */
+            height: auto;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            margin: 0 auto;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .input-container {
+            margin-top: 20px;
+        }
+        .input-container input {
+            padding: 8px;
+            margin: 5px;
+            width: 150px; /* Adjust width as needed */
+            font-family: 'B Nazanin', 'Times New Roman', serif;
+            font-size: 18px;
+            text-align: center; /* Centers text inside input */
+            direction: rtl; /* Ensures right-to-left alignment for Persian */
+        }
+        
+        .input-container button {
+            padding: 8px 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-family: 'B Nazanin', 'Times New Roman', serif;
+        }
+        .input-container select {
+            appearance: none; /* Removes default browser styling */
+            text-align-last: center; /* Ensures text alignment in dropdown */
+            padding-right: 5px; /* Adjust padding if needed */
+}
+        
+        .input-container button:hover {
+            background-color: #45a049;
+        }
+        /* Style for the home button */
+        .home-button {
+            position: absolute;
+            bottom: 20px; /* Position at the bottom */
+            left: 50%;
+            transform: translateX(-50%); /* Center horizontally */
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-family: 'B Nazanin', 'Times New Roman', serif;
+        }
+        .home-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="content-container">
+        <!-- Picture -->
+        <img src="https://i.postimg.cc/fbqbJCH8/Picture1.png" alt="Placeholder Picture">
+
+        <!-- Table -->
+        <table>
+            <thead>
+                <tr>
+                    <th>A  مقدار استاندارد </th>
+                    <th> B مقدار استاندارد </th>
+                    <th> مقدار استاندار خزش </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>138.5 :(سانتی‌متر)منیمم </td>
+                    <td>243.3 :(سانتی‌متر)منیمم </td>
+                    <td>283 :(سانتی‌متر)منیمم </td>
+
+                </tr>
+                <tr>
+                    <td>153.95 :(سانتی‌متر)ماکزیمم </td>
+                    <td>266.7 :(سانتی‌متر)ماکزیمم </td>
+                    <td>306 :(سانتی‌متر)ماکزیمم </td>
+
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Input fields and button -->
+        <div class="input-container">
+            <input type="number" id="A" placeholder="input  A">
+            <input type="number" id="B" placeholder="input  B">
+            <input type="number" id="C" placeholder="فاصله خزشی">
+            <input type="number" id="D" placeholder="تعداد محموله">
+            <input type="text" id="E" placeholder="شماره بارکد">
+            <select id="manufacturer">
+                <option value="" disabled selected>انتخاب شرکت خریدار</option>
+                <option value="Company A">شرکت تراکتورسازی تبریز</option>
+                <option value="Company B">شرکت B</option>
+                <option value="Company C">شرکت C</option>
+            </select>
+                        <input type="text" id="date" placeholder="تاریخ (YYYY/MM/DD)">
+            <script>
+                document.getElementById("date").addEventListener("input", function() {
+                    let value = this.value;
+                    let regex = /(\d{4})(\d{2})(\d{2})/;
+                    let formattedDate = value.replace(regex, '$1/$2/$3');
+                    this.value = formattedDate;
+                });
+            </script>            
+            <button onclick="checkNumbers()">بررسی</button>
+        </div>
+    </div>
+
+    <!-- Home button -->
+    <button class="home-button" onclick="redirectToHome()">بازگشت به صفحه اصلی</button>
+
+    <script>
+function checkNumbers() {
+    var A = document.getElementById("A").value;
+    var B = document.getElementById("B").value;
+    var C = document.getElementById("C").value;
+    var D = document.getElementById("D").value;
+    var E = document.getElementById("E").value;  
+    var manufacturer = document.getElementById("manufacturer").value;
+    var date = document.getElementById("date").value;
+
+    // Check if all fields are filled out
+    if (!A || !B || !C || !manufacturer || !date || !D || !E) {
+        alert("لطفاً تمام فیلدها را پر کنید.");
+        return;
+    }
+
+    A = parseFloat(A);
+    B = parseFloat(B);
+    C = parseFloat(C); // Convert C to number
+
+    // Check if A, B, and C are valid numbers
+    if (isNaN(A) || isNaN(B) || isNaN(C)) {
+        alert("مقادیر A، B و C باید عددی باشند.");
+        return;
+    }
+
+    // Get the current date in ISO format
+    var currentDateTime = new Date().toISOString();
+
+    // Check if values meet the conditions (adjust conditions as needed)
+    if (A >= 138.5 && A < 153.9 && B >= 243.3 && B < 266.7 && C >= 283 && C <= 306) {
+        // If conditions are met, prepare data and send the request
+        var requestData = {
+            A: A,
+            B: B,
+            C: C,  // Include C
+            D: D,
+            E: E,
+            manufacturer: manufacturer,
+            date: date, 
+            currentDateTime: currentDateTime,  
+        };
+
+        console.log("Sending data:", requestData);  // Debugging: Check what is sent
+
+        fetch("/save_numbers", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(requestData),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log("Response:", data);  // Debugging: Check response
+            if (data.status === "success") {
+                window.location.href = "/picture_and_table_de";  // Redirect on success
+            } else {
+                alert("خطا در ذخیره اطلاعات. لطفاً دوباره امتحان کنید.");
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            alert("ارتباط با سرور برقرار نشد.");
+        });
+    } else {
+        // If conditions are not met, show a pop-up alert
+        alert("مقادیر ورودی خارج از محدوده استاندارد هستند. لطفا با مدیریت تماس بگیرید.");
+    }
+}
+    </script>
+    
+</body>
+</html>

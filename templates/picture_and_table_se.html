@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Picture and Table Page</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            background-color: #ffffff;
+            font-family: 'B Nazanin', 'Times New Roman', serif;
+        }
+        .content-container {
+            text-align: center;
+            width: 90%;
+            max-width: 800px;
+        }
+        .content-container img {
+            width: 400px;
+            height: auto;
+            margin: 20px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .input-container {
+            margin: 15px 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+        .input-group {
+            margin-bottom: 15px;
+            width: 100%;
+        }
+        .user-info-container {
+            width: 100%;
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .user-info-container input {
+            padding: 8px;
+            margin: 5px;
+            width: calc(50% - 20px);
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 0;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        .invalid {
+            background-color: #ffdddd;
+            border: 1px solid #ff0000;
+        }
+        h2 {
+            margin-top: 30px;
+            margin-bottom: 10px;
+        }
+        .test-report-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .test-report-container label {
+            display: inline-block;
+            margin: 5px 20px 5px 0;
+            font-size: 16px;
+        }
+        .test-report-container input[type="radio"] {
+            margin-right: 5px;
+        }
+        #sample-table input, #measurements-table input, #quality-check-table input, #quality-check-table select {
+            width: 80px;
+            padding: 8px;
+            text-align: center;
+        }
+        .test-ok {
+            color: green;
+            font-weight: bold;
+        }
+        .test-not-ok {
+            color: red;
+            font-weight: bold;
+        }
+        .verification-container {
+            width: 100%;
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            text-align: right;
+        }
+        .checkbox-container {
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+        }
+        .checkbox-container input[type="checkbox"] {
+            margin-left: 10px;
+        }
+        .submit-button {
+            padding: 12px 30px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 18px;
+            margin: 20px 0;
+            width: 100%;
+        }
+        .submit-button:hover {
+            background-color: #0056b3;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.4);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 5px;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .modal-data {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="content-container">
+        <!-- User Information Section -->
+        <h2>اطلاعات محصول</h2>
+        <div class="user-info-container">
+            <div class="input-group">
+                <input type="text" id="name" placeholder="نام ارسال کننده">
+                <input type="number" id="number" placeholder="تعداد">
+            </div>
+            <div class="input-group">
+                <input type="text" id="storageCode" placeholder="کد انبار">
+                <input type="date" id="arrivalDate" placeholder="تاریخ ورود">
+            </div>
+        </div>
+
+        <!-- Product Diagram Section -->
+        <h2>نقشه محصول</h2>
+        <img src="https://i.postimg.cc/vTPGFC1n/cap.png" alt="نقشه محصول">
+
+        <!-- Measurement Standards Table -->
+        <h2>مقادیر استاندارد</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>A مقدار استاندارد</th>
+                    <th>B مقدار استاندارد</th>
+                    <th>C مقدار استاندارد</th>
+                    <th>D مقدار استاندارد</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>75 :(سانتی‌متر)منیمم</td>
+                    <td>87 :(سانتی‌متر)منیمم</td>
+                    <td>9 :(سانتی‌متر)منیمم</td>
+                    <td>3.4 :(سانتی‌متر)منیمم</td>
+                </tr>
+                <tr>
+                    <td>76.5 :(سانتی‌متر)ماکزیمم</td>
+                    <td>89 :(سانتی‌متر)ماکزیمم</td>
+                    <td>10 :(سانتی‌متر)ماکزیمم</td>
+                    <td>4.6 :(سانتی‌متر)ماکزیمم</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- New Measurement Table (replacing measurement-container) -->
+        <h2>مقادیر اندازه گیری شده تست ابعادی کلاهک</h2>
+        <table id="measurements-table">
+            <thead>
+                <tr>
+                    <th>شماره</th>
+                    <th>A مقدار</th>
+                    <th>B مقدار</th>
+                    <th>C مقدار</th>
+                    <th>D مقدار</th>
+                    <th>نتیجه</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- This will be filled with 10 rows by JavaScript -->
+            </tbody>
+        </table>
+        
+        <!-- Overall Status Display -->
+        <div style="margin: 15px 0; padding: 10px; border: 1px solid #ddd; border-radius: 5px; text-align: center; font-size: 16px;">
+            <strong>نتیجه کلی: </strong>
+            <span id="measurements-overall-status">منتظر ورودی...</span>
+        </div>
+
+        <!-- Test Report Section -->
+        <h2>گزارش شابلون</h2>
+        <table id="quality-check-table">
+            <thead>
+                <tr>
+                    <th>شماره</th>
+                    <th>شابلون یک</th>
+                    <th>شابلون دو</th>
+                    <th>شابلون سه</th>
+                    <th>شابلون چهار</th>
+                    <th>نتیجه</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- This will be filled with 10 rows by JavaScript -->
+            </tbody>
+        </table>
+
+        <!-- Sample Measurements Table -->
+        <h2>تست گالوانیزه</h2>
+        <table id="sample-table">
+            <thead>
+                <tr>
+                    <th>شماره نمونه</th>
+                    <th>تست 1</th>
+                    <th>تست 2</th>
+                    <th>تست 3</th>
+                    <th>تست 4</th>
+                    <th>میانگین</th>
+                    <th>نتیجه</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- This will be filled with 10 rows by JavaScript -->
+            </tbody>
+        </table>
+        
+        <!-- Verification Section (NEW) -->
+        <h2>تأیید و ارسال</h2>
+        <div class="verification-container">
+            <div class="checkbox-container">
+                <label for="verify-measurements">تأیید صحت اندازه‌گیری‌ها و داده‌های ورودی</label>
+                <input type="checkbox" id="verify-measurements">
+            </div>
+            <div class="checkbox-container">
+                <label for="verify-quality">تأیید انجام کنترل کیفیت طبق استانداردها</label>
+                <input type="checkbox" id="verify-quality">
+            </div>
+            
+            <button id="submit-data" class="submit-button" disabled>ارسال اطلاعات</button>
+        </div>
+    </div>
+    
+    <!-- Modal for displaying collected data (NEW) -->
+    <div id="data-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>اطلاعات ثبت شده</h2>
+            <div class="modal-data" id="collected-data">
+                <!-- Collected data will be displayed here -->
+            </div>
+            <button id="confirm-submit" class="submit-button">تأیید و ارسال به user1</button>
+        </div>
+    </div>
+
+    <script>
+        // Define the standard ranges for A, B, C, D columns
+        const standardRanges = {
+            A: { min: 75, max: 76.5 },
+            B: { min: 87, max: 89 },
+            C: { min: 9, max: 10 },
+            D: { min: 3.4, max: 4.6 }
+        };
+
+        // Initialize the measurements table
+        function initializeMeasurementsTable() {
+            const tableBody = document.querySelector("#measurements-table tbody");
+            tableBody.innerHTML = ''; // Clear existing rows
+            
+            // Create 10 rows
+            for (let i = 1; i <= 10; i++) {
+                const row = document.createElement("tr");
+                
+                // Add row number cell
+                const rowNumberCell = document.createElement("td");
+                rowNumberCell.textContent = i;
+                row.appendChild(rowNumberCell);
+                
+                // Add 4 measurement input cells
+                for (let j = 1; j <= 4; j++) {
+                    const cell = document.createElement("td");
+                    const input = document.createElement("input");
+                    input.type = "number";
+                    input.id = `measurement-${i}-${j}`;
+                    input.className = "measurement-input";
+                    input.style.width = "80px";
+                    input.addEventListener("input", () => {
+                        checkMeasurementResult(i);
+                        updateMeasurementsOverallStatus(); // Update overall status on any input change
+                    });
+                    cell.appendChild(input);
+                    row.appendChild(cell);
+                }
+                
+                // Add result cell
+                const resultCell = document.createElement("td");
+                resultCell.id = `measurement-result-${i}`;
+                resultCell.textContent = "-";
+                row.appendChild(resultCell);
+                
+                tableBody.appendChild(row);
+            }
+        }
+        
+        // Check result for a specific row in measurements table
+        function checkMeasurementResult(rowNumber) {
+            const resultCell = document.getElementById(`measurement-result-${rowNumber}`);
+            let hasInputs = false;
+            let isOutOfRange = false;
+            
+            // Check if any input is out of its allowed range
+            // Column 1 = A (min 75, max 76.5)
+            // Column 2 = B (min 87, max 89)
+            // Column 3 = C (min 9, max 10)
+            // Column 4 = D (min 3.4, max 4.6)
+            
+            for (let j = 1; j <= 4; j++) {
+                const input = document.getElementById(`measurement-${rowNumber}-${j}`);
+                const value = parseFloat(input.value);
+                
+                if (!isNaN(value)) {
+                    hasInputs = true;
+                    
+                    // Check against appropriate range based on column index
+                    let min, max;
+                    switch(j) {
+                        case 1: // A مقدار
+                            min = standardRanges.A.min;
+                            max = standardRanges.A.max;
+                            break;
+                        case 2: // B مقدار
+                            min = standardRanges.B.min;
+                            max = standardRanges.B.max;
+                            break;
+                        case 3: // C مقدار
+                            min = standardRanges.C.min;
+                            max = standardRanges.C.max;
+                            break;
+                        case 4: // D مقدار
+                            min = standardRanges.D.min;
+                            max = standardRanges.D.max;
+                            break;
+                    }
+                    
+                    if (value < min || value > max) {
+                        isOutOfRange = true;
+                    }
+                }
+            }
+            
+            // Set result based on conditions
+            if (!hasInputs) {
+                resultCell.textContent = "-";
+                resultCell.className = "";
+            } else if (isOutOfRange) {
+                resultCell.textContent = "Not OK";
+                resultCell.className = "test-not-ok";
+            } else {
+                resultCell.textContent = "OK";
+                resultCell.className = "test-ok";
+            }
+            
+            return !isOutOfRange && hasInputs;
+        }
+        
+        // Function to check all measurement rows and update overall status
+        function updateMeasurementsOverallStatus() {
+            let allOk = true;
+            let hasAnyInput = false;
+            
+            for (let i = 1; i <= 10; i++) {
+                // Check if any inputs exist in this row
+                let rowHasInputs = false;
+                for (let j = 1; j <= 4; j++) {
+                    const input = document.getElementById(`measurement-${i}-${j}`);
+                    if (input && input.value !== "") {
+                        rowHasInputs = true;
+                        hasAnyInput = true;
+                        break;
+                    }
+                }
+                
+                // If row has inputs, check the result
+                if (rowHasInputs) {
+                    const isRowOk = checkMeasurementResult(i);
+                    if (!isRowOk) {
+                        allOk = false;
+                    }
+                }
+            }
+            
+            // Update overall status display if it exists
+            const overallStatusElement = document.getElementById("measurements-overall-status");
+            if (overallStatusElement) {
+                if (!hasAnyInput) {
+                    overallStatusElement.textContent = "لطفا حداقل یک مقدار را وارد کنید";
+                    overallStatusElement.className = "";
+                } else if (allOk) {
+                    overallStatusElement.textContent = "تمام مقادیر در محدوده مجاز هستند";
+                    overallStatusElement.className = "test-ok";
+                } else {
+                    overallStatusElement.textContent = "برخی مقادیر خارج از محدوده مجاز هستند";
+                    overallStatusElement.className = "test-not-ok";
+                }
+            }
+            
+            return { allOk, hasAnyInput };
+        }
+
+        // Initialize the sample table
+        function initializeSampleTable() {
+            const tableBody = document.querySelector("#sample-table tbody");
+            tableBody.innerHTML = ''; // Clear existing rows
+            
+            // Create 10 rows
+            for (let i = 1; i <= 10; i++) {
+                const row = document.createElement("tr");
+                
+                // Add row number cell
+                const rowNumberCell = document.createElement("td");
+                rowNumberCell.textContent = i;
+                row.appendChild(rowNumberCell);
+                
+                // Add 4 sample input cells
+                for (let j = 1; j <= 4; j++) {
+                    const cell = document.createElement("td");
+                    const input = document.createElement("input");
+                    input.type = "number";
+                    input.id = `sample-${i}-${j}`;
+                    input.className = "sample-input";
+                    input.style.width = "80px";
+                    input.addEventListener("input", () => {
+                        calculateRowAverage(i);
+                        checkRowResult(i);
+                    });
+                    cell.appendChild(input);
+                    row.appendChild(cell);
+                }
+                
+                // Add average cell
+                const avgCell = document.createElement("td");
+                avgCell.id = `average-${i}`;
+                avgCell.textContent = "-";
+                row.appendChild(avgCell);
+                
+                // Add result cell
+                const resultCell = document.createElement("td");
+                resultCell.id = `result-${i}`;
+                resultCell.textContent = "-";
+                row.appendChild(resultCell);
+                
+                tableBody.appendChild(row);
+            }
+        }
+        
+        // Calculate average for a specific row
+        function calculateRowAverage(rowNumber) {
+            let sum = 0;
+            let count = 0;
+            
+            for (let j = 1; j <= 4; j++) {
+                const input = document.getElementById(`sample-${rowNumber}-${j}`);
+                const value = parseFloat(input.value);
+                
+                if (!isNaN(value)) {
+                    sum += value;
+                    count++;
+                }
+            }
+            
+            const avgCell = document.getElementById(`average-${rowNumber}`);
+            if (count > 0) {
+                avgCell.textContent = (sum / count).toFixed(2);
+                return sum / count;
+            } else {
+                avgCell.textContent = "-";
+                return null;
+            }
+        }
+        
+        // Check result for a specific row
+        function checkRowResult(rowNumber) {
+            const resultCell = document.getElementById(`result-${rowNumber}`);
+            let anyValueBelowThreshold = false;
+            let hasInputs = false;
+            
+            // Check if any input is below 80
+            for (let j = 1; j <= 4; j++) {
+                const input = document.getElementById(`sample-${rowNumber}-${j}`);
+                const value = parseFloat(input.value);
+                
+                if (!isNaN(value)) {
+                    hasInputs = true;
+                    if (value < 80) {
+                        anyValueBelowThreshold = true;
+                    }
+                }
+            }
+            
+            // Get the average
+            const average = calculateRowAverage(rowNumber);
+            
+            // Set result based on conditions
+            if (!hasInputs) {
+                resultCell.textContent = "-";
+                resultCell.className = "";
+            } else if (anyValueBelowThreshold || (average !== null && average < 110)) {
+                resultCell.textContent = "Not OK";
+                resultCell.className = "test-not-ok";
+            } else {
+                resultCell.textContent = "OK";
+                resultCell.className = "test-ok";
+            }
+        }
+        
+        // Initialize the quality check table
+        function initializeQualityCheckTable() {
+            const tableBody = document.querySelector("#quality-check-table tbody");
+            tableBody.innerHTML = ''; // Clear existing rows
+            
+            // Create 10 rows
+            for (let i = 1; i <= 10; i++) {
+                const row = document.createElement("tr");
+                
+                // Add row number cell
+                const rowNumberCell = document.createElement("td");
+                rowNumberCell.textContent = i;
+                row.appendChild(rowNumberCell);
+                
+                // Add 4 test input cells
+                for (let j = 1; j <= 4; j++) {
+                    const cell = document.createElement("td");
+                    const select = document.createElement("select");
+                    select.id = `quality-check-${i}-${j}`;
+                    select.className = "quality-check-select";
+                    
+                    // Add OK option
+                    const okOption = document.createElement("option");
+                    okOption.value = "OK";
+                    okOption.textContent = "OK";
+                    select.appendChild(okOption);
+                    
+                    // Add Not OK option
+                    const notOkOption = document.createElement("option");
+                    notOkOption.value = "Not OK";
+                    notOkOption.textContent = "Not OK";
+                    select.appendChild(notOkOption);
+                    
+                    // Add event listener to update result instantly
+                    select.addEventListener("change", () => {
+                        checkQualityResultForRow(i);
+                    });
+                    
+                    cell.appendChild(select);
+                    row.appendChild(cell);
+                }
+                
+                // Add result cell
+                const resultCell = document.createElement("td");
+                resultCell.id = `quality-result-${i}`;
+                resultCell.textContent = "OK"; // Default to OK since all selects start with "OK"
+                resultCell.className = "test-ok"; // Default to OK class
+                row.appendChild(resultCell);
+                
+                tableBody.appendChild(row);
+            }
+        }
+        
+        // Check quality result for a specific row
+        function checkQualityResultForRow(rowNumber) {
+            let rowOk = true;
+            
+            // Check all selections in this row
+            for (let j = 1; j <= 4; j++) {
+                const select = document.getElementById(`quality-check-${rowNumber}-${j}`);
+                if (select.value === "Not OK") {
+                    rowOk = false;
+                    break;
+                }
+            }
+            
+            // Update row result
+            const resultCell = document.getElementById(`quality-result-${rowNumber}`);
+            if (rowOk) {
+                resultCell.textContent = "OK";
+                resultCell.className = "test-ok";
+            } else {
+                resultCell.textContent = "Not OK";
+                resultCell.className = "test-not-ok";
+            }
+        }
+        
+        // Function to collect all data from the form
+        function collectFormData() {
+            const data = {
+                userInfo: {
+                    name: document.getElementById('name').value || 'فاقد اطلاعات',
+                    number: document.getElementById('number').value || 'فاقد اطلاعات',
+                    storageCode: document.getElementById('storageCode').value || 'فاقد اطلاعات',
+                    arrivalDate: document.getElementById('arrivalDate').value || 'فاقد اطلاعات'
+                },
+                measurements: [],
+                qualityChecks: [],
+                samples: []
+            };
+            
+            // Collect measurements data
+            for (let i = 1; i <= 10; i++) {
+                const rowData = {
+                    rowNumber: i,
+                    values: [],
+                    result: document.getElementById(`measurement-result-${i}`).textContent
+                };
+                
+                for (let j = 1; j <= 4; j++) {
+                    const value = document.getElementById(`measurement-${i}-${j}`).value;
+                    rowData.values.push(value || '-');
+                }
+                
+                data.measurements.push(rowData);
+            }
+            
+            // Collect quality check data
+            for (let i = 1; i <= 10; i++) {
+                const rowData = {
+                    rowNumber: i,
+                    checks: [],
+                    result: document.getElementById(`quality-result-${i}`).textContent
+                };
+                
+                for (let j = 1; j <= 4; j++) {
+                    const value = document.getElementById(`quality-check-${i}-${j}`).value;
+                    rowData.checks.push(value);
+                }
+                
+                data.qualityChecks.push(rowData);
+            }
+            
+            // Collect sample data
+            for (let i = 1; i <= 10; i++) {
+                const rowData = {
+                    rowNumber: i,
+                    tests: [],
+                    average: document.getElementById(`average-${i}`).textContent,
+                    result: document.getElementById(`result-${i}`).textContent
+                };
+                
+                for (let j = 1; j <= 4; j++) {
+                    const value = document.getElementById(`sample-${i}-${j}`).value;
+                    rowData.tests.push(value || '-');
+                }
+                
+                data.samples.push(rowData);
+            }
+            
+            // Overall measurement result
+            data.overallMeasurementResult = document.getElementById('measurements-overall-status').textContent;
+            
+            return data;
+        }
+        
+        // Function to display collected data in the modal
+        function displayCollectedData(data) {
+            const container = document.getElementById('collected-data');
+            
+            // Clear previous data
+            container.innerHTML = '';
+            
+            // Add user info
+            const userInfoDiv = document.createElement('div');
+            userInfoDiv.innerHTML = `
+                <h3>اطلاعات محصول</h3>
+                <p><strong>نام ارسال کننده:</strong> ${data.userInfo.name}</p>
+                <p><strong>تعداد:</strong> ${data.userInfo.number}</p>
+                <p><strong>کد انبار:</strong> ${data.userInfo.storageCode}</p>
+                <p><strong>تاریخ ورود:</strong> ${data.userInfo.arrivalDate}</p>
+                <hr>
+            `;
+            container.appendChild(userInfoDiv);
+            
+            // Add measurements section
+            const measurementsDiv = document.createElement('div');
+            measurementsDiv.innerHTML = `
+                <h3>نتایج تست ابعادی کلاهک</h3>
+                <p><strong>نتیجه کلی:</strong> <span class="${data.overallMeasurementResult.includes('مجاز') ? 'test-ok' : 'test-not-ok'}">${data.overallMeasurementResult}</span></p>
+                <hr>
+            `;
+            container.appendChild(measurementsDiv);
+            
+            // Add quality checks section
+            const qualityDiv = document.createElement('div');
+            qualityDiv.innerHTML = `<h3>نتایج گزارش شابلون</h3>`;
+            
+            // Check if any quality check is "Not OK"
+            let anyQualityNotOk = false;
+            for (const row of data.qualityChecks) {
+                if (row.result === "Not OK") {
+                    anyQualityNotOk = true;
+                    break;
+                }
+            }
+            
+            qualityDiv.innerHTML += `
+                <p><strong>نتیجه کلی:</strong> <span class="${anyQualityNotOk ? 'test-not-ok' : 'test-ok'}">${anyQualityNotOk ? 'برخی موارد خارج از استاندارد هستند' : 'تمام موارد در محدوده استاندارد هستند'}</span></p>
+                <hr>
+            `;
+            container.appendChild(qualityDiv);
+            
+            // Add samples section
+            const samplesDiv = document.createElement('div');
+            samplesDiv.innerHTML = `<h3>نتایج تست گالوانیزه</h3>`;
+            
+            // Check if any sample is "Not OK"
+            let anySampleNotOk = false;
+            for (const row of data.samples) {
+                if (row.result === "Not OK") {
+                    anySampleNotOk = true;
+                    break;
+                }
+            }
+            
+            samplesDiv.innerHTML += `
+                <p><strong>نتیجه کلی:</strong> <span class="${anySampleNotOk ? 'test-not-ok' : 'test-ok'}">${anySampleNotOk ? 'برخی نمونه‌ها خارج از استاندارد هستند' : 'تمام نمونه‌ها در محدوده استاندارد هستند'}</span></p>
+                <hr>
+            `;
+            container.appendChild(samplesDiv);
+            
+            // Add verification confirmation
+            const verificationDiv = document.createElement('div');
+            verificationDiv.innerHTML = `
+                <h3>تأییدیه‌ها</h3>
+                <p><strong>تأیید صحت اندازه‌گیری‌ها و داده‌های ورودی:</strong> ✓</p>
+                <p><strong>تأیید انجام کنترل کیفیت طبق استانداردها:</strong> ✓</p>
+            `;
+            container.appendChild(verificationDiv);
+        }
+        
+        // Handle checkbox change to enable/disable submit button
+        function handleCheckboxChange() {
+            const verifyMeasurements = document.getElementById('verify-measurements').checked;
+            const verifyQuality = document.getElementById('verify-quality').checked;
+            const submitButton = document.getElementById('submit-data');
+            
+            // Enable submit button only if both checkboxes are checked
+            submitButton.disabled = !(verifyMeasurements && verifyQuality);
+        }
+        
+        // Function to show modal with collected data
+        function showDataModal() {
+            const modal = document.getElementById('data-modal');
+            const data = collectFormData();
+            displayCollectedData(data);
+            modal.style.display = 'block';
+        }
+        
+        // Initialize tables when page loads
+        window.addEventListener("load", function() {
+            initializeMeasurementsTable();
+            initializeSampleTable();
+            initializeQualityCheckTable();
+            
+            // Set initial overall status
+            updateMeasurementsOverallStatus();
+            
+            // Set up checkbox event listeners
+            document.getElementById('verify-measurements').addEventListener('change', handleCheckboxChange);
+            document.getElementById('verify-quality').addEventListener('change', handleCheckboxChange);
+            
+            // Set up submit button event listener
+            document.getElementById('submit-data').addEventListener('click', showDataModal);
+            
+            // Set up modal close button
+            document.getElementsByClassName('close')[0].addEventListener('click', function() {
+                document.getElementById('data-modal').style.display = 'none';
+            });
+            
+            // Set up confirm submit button
+            document.getElementById('confirm-submit').addEventListener('click', function() {
+                // Here you would send the data to user1
+                alert('اطلاعات با موفقیت به user1 ارسال شد.');
+                document.getElementById('data-modal').style.display = 'none';
+                
+                // Optional: Reset form or redirect
+                // resetForm(); // You could implement this function to clear all inputs
+                // Or redirect: window.location.href = 'confirmation-page.html';
+            });
+            
+            // Close modal when clicking outside of it
+            window.addEventListener('click', function(event) {
+                const modal = document.getElementById('data-modal');
+                if (event.target == modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

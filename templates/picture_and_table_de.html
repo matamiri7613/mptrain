@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Picture and Table Page</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #ffffff; /* Plain white background */
+            font-family: 'B Nazanin', 'Times New Roman', serif;
+        }
+        .content-container {
+            text-align: center;
+        }
+        .content-container img {
+            width: 150px; /* Adjust the size of the picture */
+            height: auto;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            margin: 0 auto;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .input-container {
+            margin-top: 20px;
+        }
+        .input-container input {
+            padding: 8px;
+            margin: 5px;
+            width: 100px;
+        }
+        .input-container button {
+            padding: 8px 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .input-container button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="content-container">
+        <!-- Picture -->
+        <img src="https://i.postimg.cc/C1WSzss9/Dastak.png" alt="Placeholder Picture">
+
+        <!-- Table -->
+        <table>
+            <thead>
+                <tr>
+                    <th>A  مقدار استاندارد </th>
+                    <th> B مقدار استاندارد </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>110 :(سانتی‌متر)منیمم </td>
+                    <td>112 :(سانتی‌متر)منیمم </td>
+                </tr>
+                <tr>
+                    <td>113 :(سانتی‌متر)ماکزیمم </td>
+                    <td>114 :(سانتی‌متر)ماکزیمم </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Input fields and button -->
+        <div class="input-container">
+            <input type="number" id="number1" placeholder="input  A">
+            <input type="number" id="number2" placeholder="input  B">
+            <button onclick="checkNumbers()">Check</button>
+        </div>
+    </div>
+
+    <script>
+        function checkNumbers() {
+            // Get the values from the input fields
+            var number1 = document.getElementById("number1").value;
+            var number2 = document.getElementById("number2").value;
+
+            // Convert the input values to numbers
+            number1 = parseInt(number1);
+            number2 = parseInt(number2);
+
+            // Check if both numbers are between 200 and 300
+            if (number1 >= 200 && number1 <= 300 && number2 >= 200 && number2 <= 300) {
+                // Redirect to another page with a question box
+                window.location.href = "questionPage.html"; // Replace with your desired page
+            } else {
+                // Show a pop-up message
+                alert("با مدیریت تماس حاصل کنید");
+            }
+        }
+    </script>
+</body>
+</html>

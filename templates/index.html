@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>صفحه اصلی</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <!-- Add B Nazanin Font -->
+    <style>
+        @font-face {
+            font-family: 'B Nazanin';
+            src: url('https://cdnjs.cloudflare.com/ajax/libs/BYekan/1.0/BYekan-webfont.eot');
+            src: url('https://cdnjs.cloudflare.com/ajax/libs/BYekan/1.0/BYekan-webfont.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        body {
+            font-family: 'B Nazanin', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f4f8;
+            direction: rtl;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #3a7bd5, #00d2ff);
+            padding: 20px 0;
+            color: white;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+        
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            font-size: 2.2em;
+            margin-bottom: 30px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+        
+        h1:after {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, #3a7bd5, #00d2ff);
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        h2 {
+            color: #3498db;
+            margin: 25px 0 15px;
+            font-size: 1.5em;
+        }
+        
+        .menu {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 30px 0;
+            justify-content: center;
+        }
+        
+        .menu-item {
+            background: linear-gradient(135deg, #3a7bd5, #00d2ff);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            text-align: center;
+            min-width: 160px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .menu-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+            background: linear-gradient(135deg, #3494e6, #0099ff);
+        }
+        
+        .menu-item i {
+            margin-left: 8px;
+        }
+        
+        .notification-area {
+            margin: 30px 0;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            border-right: 4px solid #3498db;
+        }
+        
+        .notification-item {
+            padding: 15px;
+            margin-bottom: 15px;
+            background-color: #f9f9f9;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .notification-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .notification-item.unread {
+            border-right: 4px solid #3498db;
+            background-color: #f0f8ff;
+        }
+        
+        .notification-date {
+            font-size: 13px;
+            color: #777;
+            margin-bottom: 5px;
+        }
+        
+        .notification-message {
+            margin: 8px 0;
+            line-height: 1.5;
+        }
+        
+        .notification-button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'B Nazanin', Arial, sans-serif;
+            transition: background-color 0.3s;
+        }
+        
+        .notification-button:hover {
+            background-color: #2980b9;
+        }
+        
+        .flash-message {
+            padding: 15px;
+            margin-bottom: 25px;
+            border-radius: 6px;
+            border-right: 4px solid transparent;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            position: relative;
+            animation: slideIn 0.5s ease-out;
+        }
+        
+        @keyframes slideIn {
+            0% { opacity: 0; transform: translateY(-20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        
+        .flash-message.success {
+            background-color: #e8f5e9;
+            border-color: #4CAF50;
+            color: #388e3c;
+        }
+        
+        .flash-message.error {
+            background-color: #ffebee;
+            border-color: #f44336;
+            color: #d32f2f;
+        }
+        
+        .flash-message.info {
+            background-color: #e3f2fd;
+            border-color: #2196F3;
+            color: #1976d2;
+        }
+        
+        /* Final Results styles */
+        .final-results-container {
+            margin: 30px 0;
+            padding: 25px;
+            background-color: #f1f8e9;
+            border-radius: 8px;
+            border-right: 4px solid #4CAF50;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        }
+        
+        .final-results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .final-results-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .final-results-refresh {
+            color: #3498db;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            background-color: #ecf0f1;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .final-results-refresh:hover {
+            background-color: #d6eaf8;
+        }
+        
+        .final-results-refresh i {
+            margin-left: 5px;
+        }
+        
+        .final-result-item {
+            background-color: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+            transition: all 0.3s ease;
+        }
+        
+        .final-result-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        
+        .final-result-item.highlight {
+            border-right: 4px solid #4CAF50;
+            background-color: #f9fff9;
+        }
+        
+        .no-results {
+            text-align: center;
+            color: #7f8c8d;
+            font-style: italic;
+            padding: 30px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+        
+        .approved {
+            background-color: #4CAF50;
+            color: white;
+        }
+        
+        .rejected {
+            background-color: #f44336;
+            color: white;
+        }
+        
+        .result-properties {
+            background-color: #f9f9f9;
+            padding: 12px;
+            border-radius: 6px;
+            margin: 10px 0;
+            border-right: 3px solid #ddd;
+        }
+        
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 14px;
+            padding: 15px;
+            border-top: 1px solid #ecf0f1;
+        }
+        
+        /* Additional data styles */
+        .secondary-data {
+            margin-top: 15px;
+            padding: 12px;
+            background-color: #e8f4ff;
+            border-radius: 6px;
+            border-right: 3px solid #2196F3;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        
+        .data-table th, .data-table td {
+            padding: 8px;
+            text-align: right;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .data-table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        
+        .data-label {
+            font-weight: bold;
+            margin-right: 5px;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            .menu-item {
+                min-width: 120px;
+                font-size: 14px;
+            }
+            
+            .final-results-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .final-results-refresh {
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>سامانه مدیریت داده‌ها</h1>
+    </div>
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash-message {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <!-- نتایج نهایی بررسی کننده اصلی section -->
+        <div class="final-results-container" id="user1-final-results">
+            <div class="final-results-header">
+                <div class="final-results-title"><i class="fas fa-clipboard-check"></i> نتایج نهایی بررسی کننده اصلی</div>
+                <div class="final-results-refresh" onclick="fetchUser1FinalResults()"><i class="fas fa-sync-alt"></i> بروزرسانی</div>
+            </div>
+            <div id="final-results-content">
+                <p class="no-results"><i class="fas fa-spinner fa-pulse"></i> در حال بارگیری نتایج نهایی...</p>
+            </div>
+        </div>
+        
+        <div class="notification-area" id="notifications-container">
+            <h2><i class="fas fa-bell"></i> اعلان‌های جدید</h2>
+            <div id="notification-list">
+                <p class="no-results"><i class="fas fa-spinner fa-pulse"></i> در حال بارگیری اعلان‌ها...</p>
+            </div>
+        </div>
+        
+        <div class="menu">
+            {% if user_role == 'admin' %}
+                <a href="{{ url_for('admin_dashboard') }}" class="menu-item"><i class="fas fa-tachometer-alt"></i> داشبورد مدیر</a>
+            {% elif user_role == 'primary_reviewer' %}
+                <a href="{{ url_for('reviewer_dashboard') }}" class="menu-item"><i class="fas fa-check-circle"></i> داشبورد بررسی کننده اولیه</a>
+            {% elif user_role == 'secondary_reviewer' %}
+                <a href="{{ url_for('reviewer_dashboard') }}" class="menu-item"><i class="fas fa-tasks"></i> داشبورد بررسی کننده ثانویه</a>
+            {% elif user_role == 'submitter' %}
+                <a href="{{ url_for('submitter_dashboard') }}" class="menu-item"><i class="fas fa-warehouse"></i> داشبورد انبار</a>
+            {% endif %}
+            
+            {% if user_role == 'admin' or user_role == 'secondary_reviewer' %}
+                <a href="{{ url_for('picture_and_table') }}" class="menu-item"><i class="fas fa-image"></i> تصویر و جدول</a>
+            {% endif %}
+            
+            {% if user_role == 'admin' or user_role == 'secondary_reviewer' %}
+                <a href="{{ url_for('picture_and_table_se') }}" class="menu-item"><i class="fas fa-vial"></i> آزمایش کلاهک</a>
+                <a href="{{ url_for('picture_and_table_de') }}" class="menu-item"><i class="fas fa-microscope"></i> آزمایش دستک</a>
+            {% endif %}
+            
+            <a href="{{ url_for('logout') }}" class="menu-item"><i class="fas fa-sign-out-alt"></i> خروج</a>
+        </div>
+        
+        <div class="footer">
+            تمامی حقوق محفوظ است © ۱۴۰۴
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetchNotifications();
+            fetchUser1FinalResults(); // Fetch final results when page loads
+        });
+
+        function fetchNotifications() {
+            fetch('/notifications')
+                .then(response => response.json())
+                .then(data => {
+                    displayNotifications(data);
+                })
+                .catch(error => {
+                    console.error('Error fetching notifications:', error);
+                    document.getElementById('notification-list').innerHTML = 
+                        '<p class="no-results"><i class="fas fa-exclamation-circle"></i> خطا در بارگیری اعلان‌ها</p>';
+                });
+        }
+
+        function displayNotifications(notifications) {
+            const container = document.getElementById('notification-list');
+            
+            // Filter out read notifications
+            const unreadNotifications = notifications.filter(notification => !notification.read);
+            
+            if (unreadNotifications.length === 0) {
+                container.innerHTML = '<p class="no-results"><i class="fas fa-check-circle"></i> شما هیچ اعلان جدیدی ندارید</p>';
+                return;
+            }
+            
+            let html = '';
+            
+            unreadNotifications.forEach(notification => {
+                html += `
+                    <div class="notification-item unread" id="notification-${notification.id}">
+                        <div class="notification-date"><i class="far fa-clock"></i> ${new Date(notification.timestamp * 1000).toLocaleString('fa-IR')}</div>
+                        <div class="notification-message">${notification.message}</div>
+                        <button class="notification-button" onclick="markNotificationRead('${notification.id}')"><i class="fas fa-check"></i> علامت خوانده شده</button>
+                    </div>`;
+            });
+            
+            container.innerHTML = html;
+        }
+
+        function markNotificationRead(notificationId) {
+            fetch(`/notifications/mark_read/${notificationId}`, {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    // Remove the entire notification instead of just removing the button
+                    const notification = document.getElementById(`notification-${notificationId}`);
+                    if (notification) {
+                        notification.remove();
+                    }
+                    
+                    // Check if there are no more notifications
+                    const container = document.getElementById('notification-list');
+                    if (container.children.length === 0) {
+                        container.innerHTML = '<p class="no-results"><i class="fas fa-check-circle"></i> شما هیچ اعلان جدیدی ندارید</p>';
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error marking notification as read:', error);
+            });
+        }
+
+        // Function to fetch and display final results from user1
+        function fetchUser1FinalResults() {
+            const contentElement = document.getElementById('final-results-content');
+            contentElement.innerHTML = '<p class="no-results"><i class="fas fa-spinner fa-pulse"></i> در حال بارگیری نتایج نهایی...</p>';
+            
+            fetch('/user1_final_results')
+                .then(response => response.json())
+                .then(data => {
+                    displayUser1FinalResults(data);
+                })
+                .catch(error => {
+                    console.error('Error fetching user1 final results:', error);
+                    document.getElementById('final-results-content').innerHTML = 
+                        '<p class="no-results"><i class="fas fa-exclamation-circle"></i> خطا در بارگیری نتایج نهایی</p>';
+                });
+        }
+
+        // Function to display final results from user1
+        function displayUser1FinalResults(results) {
+            const container = document.getElementById('final-results-content');
+            
+            if (!results || results.length === 0) {
+                container.innerHTML = '<p class="no-results"><i class="fas fa-info-circle"></i> هیچ نتیجه نهایی از بررسی کننده اصلی وجود ندارد</p>';
+                return;
+            }
+            
+            let html = '';
+            
+            // Sort results by timestamp, newest first
+            results.sort((a, b) => b.final_decision_timestamp - a.final_decision_timestamp);
+            
+            // Limit to showing only the 5 most recent results on the index page
+            const recentResults = results.slice(0, 5);
+            
+            recentResults.forEach(result => {
+                const statusClass = result.approved ? 'approved' : 'rejected';
+                const statusText = result.approved ? 'تایید شده' : 'رد شده';
+                const statusIcon = result.approved ? '<i class="fas fa-check-circle"></i>' : '<i class="fas fa-times-circle"></i>';
+                const highlightClass = result.new ? 'highlight' : '';
+                
+                html += `
+                    <div class="final-result-item ${highlightClass}">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <div>
+                                <strong><i class="far fa-calendar-alt"></i> تاریخ تصمیم نهایی:</strong> ${new Date(result.final_decision_timestamp * 1000).toLocaleString('fa-IR')}
+                            </div>
+                            <div>
+                                <span class="status-badge ${statusClass}">${statusIcon} ${statusText}</span>
+                            </div>
+                        </div>
+                        <div class="result-properties">
+                            <p><strong><i class="fas fa-info-circle"></i> مقادیر:</strong></p>
+                            <ul style="list-style-type: none; padding-right: 10px;">
+                                <li><i class="fas fa-tag"></i> نوع محصول: ${result.A}</li>
+                                <li><i class="fas fa-weight"></i> وزن (کیلوگرم): ${result.B}</li>
+                                <li><i class="fas fa-list-ol"></i> تعداد (عدد): ${result.C}</li>
+                                <li><i class="fas fa-barcode"></i> کد کالا: ${result.D}</li>
+                                <li><i class="fas fa-check-double"></i> تعداد سالم بعد از شمارش (عدد): ${result.E}</li>
+                            </ul>
+                        </div>
+                        <p><strong><i class="fas fa-industry"></i> سازنده:</strong> ${result.manufacturer}</p>
+                        <p><strong><i class="far fa-calendar"></i> تاریخ:</strong> ${result.date}</p>
+                        ${result.comment ? `<p><strong><i class="fas fa-comment"></i> توضیحات بررسی کننده:</strong> ${result.comment}</p>` : ''}`;
+                
+                // Add secondary reviewer data section if available
+                if (result.has_secondary_data) {
+                    html += `
+                        <div class="secondary-data">
+                            <p><strong><i class="fas fa-clipboard-list"></i> داده‌های تکمیلی از بررسی‌کننده ثانویه:</strong></p>
+                            <table class="data-table">
+                                <tr>
+                                    <th>نتیجه بررسی کیفیت</th>
+                                    <th>وضعیت بسته بندی</th>
+                                    <th>خط تولید</th>
+                                    <th>کد تایید محصول</th>
+                                </tr>
+                                <tr>
+                                    <td>${result.secondary_data.quality_check}</td>
+                                    <td>${result.secondary_data.packaging_status}</td>
+                                    <td>${result.secondary_data.production_line}</td>
+                                    <td>${result.secondary_data.verification_code}</td>
+                                </tr>
+                            </table>
+                        </div>`;
+                }
+                
+                html += `</div>`;
+            });
+            
+            if (results.length > 5) {
+                html += `
+                    <div style="text-align: center; margin-top: 20px;">
+                        <a href="{{ url_for('submitter_dashboard') }}" class="menu-item" style="display: inline-block; min-width: 200px;"><i class="fas fa-list"></i> مشاهده همه نتایج</a>
+                    </div>`;
+            }
+            
+            container.innerHTML = html;
+            
+            // After displaying new results, mark them as seen
+            if (recentResults.some(r => r.new)) {
+                markNewResultsAsSeen();
+            }
+        }
+
+        // Function to mark new results as seen
+        function markNewResultsAsSeen() {
+            fetch('/mark_results_seen', {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Marked results as seen:', data);
+            })
+            .catch(error => {
+                console.error('Error marking results as seen:', error);
+            });
+        }
+    </script>
+</body>
+</html>

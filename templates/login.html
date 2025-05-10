@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سیستم انبار و پردازش تولید</title>
+    <style>
+        @font-face {
+            font-family: 'B Nazanin';
+            src: url('https://cdnjs.cloudflare.com/ajax/libs/B-Nazanin/1.0.0/BNazanin.woff2') format('woff2'),
+                 url('https://cdnjs.cloudflare.com/ajax/libs/B-Nazanin/1.0.0/BNazanin.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'B Nazanin', 'Times New Roman', serif;
+        }
+        
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: #ffffff; /* Plain white background */
+            font-family: 'B Nazanin', 'Times New Roman', serif;
+            direction: rtl;
+        }
+        
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            max-width: 400px;
+            width: 90%;
+        }
+        
+        .logo {
+            margin-bottom: 20px;
+            animation: fadeInDown 1s ease;
+        }
+        
+        .logo img {
+            width: 200px;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .logo img:hover {
+            transform: scale(1.05);
+        }
+        
+        .login-container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 100%;
+            animation: fadeInUp 1s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .login-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .login-container h1 {
+            margin-bottom: 25px;
+            color: #333;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .form-group {
+            position: relative;
+            margin-bottom: 20px;
+            text-align: right;
+        }
+        
+        .login-container label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+            transition: color 0.3s ease;
+        }
+        
+        .form-group:focus-within label {
+            color: #007bff;
+        }
+        
+        .login-container input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1e1e1;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background-color: #f8f9fa;
+            color: #333;
+            text-align: right;
+        }
+        
+        .login-container input:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+            outline: none;
+            background-color: #fff;
+        }
+        
+        .login-container button {
+            width: 100%;
+            padding: 12px 20px;
+            background: linear-gradient(to right, #007bff, #0069d9);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .login-container button:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, #0069d9, #004a9f);
+            transition: left 0.3s ease;
+            z-index: -1;
+        }
+        
+        .login-container button:hover:before {
+            left: 0;
+        }
+        
+        .login-container button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 105, 217, 0.4);
+        }
+        
+        .login-container button:active {
+            transform: translateY(1px);
+        }
+        
+        .alert {
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            animation: fadeIn 0.5s ease;
+            text-align: right;
+        }
+        
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+        
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid #dc3545;
+        }
+        
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        /* Input focus animation */
+        .input-effect {
+            position: relative;
+        }
+        
+        .focus-border {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: #007bff;
+            transition: width 0.3s ease;
+        }
+        
+        .input-effect input:focus ~ .focus-border {
+            width: 100%;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .container {
+                width: 95%;
+            }
+            
+            .login-container {
+                padding: 20px;
+            }
+            
+            .login-container h1 {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <img src="https://i.postimg.cc/bysf4D20/logo.jpg?dl=1" alt="Logo شرکت مانه‌پرتو">
+        </div>
+        <div class="login-container">
+            <h3>اتوماسیون پرتو</h3>
+            
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+            <form method="POST" action="/login">
+                <div class="form-group">
+                    <label for="username">نام کاربری:</label>
+                    <div class="input-effect">
+                        <input type="text" id="username" name="username" required>
+                        <span class="focus-border"></span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">رمز عبور:</label>
+                    <div class="input-effect">
+                        <input type="password" id="password" name="password" required>
+                        <span class="focus-border"></span>
+                    </div>
+                </div>
+                
+                <button type="submit">ورود به سیستم</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Add animation class when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelector('.logo').classList.add('animate');
+            document.querySelector('.login-container').classList.add('animate');
+        });
+
+        // Add focus effect to inputs
+        const inputs = document.querySelectorAll('input');
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.classList.add('focused');
+            });
+            
+            input.addEventListener('blur', function() {
+                if (this.value === '') {
+                    this.parentElement.classList.remove('focused');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

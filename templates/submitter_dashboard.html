@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Submitter Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        @font-face {
+            font-family: 'B Nazanin';
+            src: url('https://cdn.fontcdn.ir/Font/Persian/Nazanin/Nazanin.eot');
+            src: url('https://cdn.fontcdn.ir/Font/Persian/Nazanin/Nazanin.eot?#iefix') format('embedded-opentype'),
+                 url('https://cdn.fontcdn.ir/Font/Persian/Nazanin/Nazanin.woff') format('woff'),
+                 url('https://cdn.fontcdn.ir/Font/Persian/Nazanin/Nazanin.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+        
+        body {
+            font-family: 'B Nazanin', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            direction: rtl;
+            font-size: 16px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        h1, h2, h3, h4 {
+            font-family: 'B Nazanin', Arial, sans-serif;
+            color: #333;
+            text-align: center;
+        }
+        h1 {
+            font-size: 28px;
+            margin-bottom: 25px;
+        }
+        h2 {
+            font-size: 22px;
+            margin: 20px 0;
+            color: #2196F3;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        
+        .submission-form {
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            border-left: 4px solid #4CAF50;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: 'B Nazanin', Arial, sans-serif;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        .form-group input:focus, .form-group select:focus {
+            border-color: #2196F3;
+            outline: none;
+            box-shadow: 0 0 5px rgba(33, 150, 243, 0.3);
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 5px;
+            font-family: 'B Nazanin', Arial, sans-serif;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .btn-submit {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .btn-submit:hover {
+            background-color: #388e3c;
+        }
+        .btn-view {
+            background-color: #2196F3;
+            color: white;
+        }
+        .btn-view:hover {
+            background-color: #1976d2;
+        }
+        .btn-back {
+            background-color: #607D8B;
+            color: white;
+        }
+        .btn-back:hover {
+            background-color: #455A64;
+        }
+        .submissions-list {
+            margin-top: 20px;
+        }
+        .submission-item {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            transition: transform 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .submission-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .pending {
+            background-color: #FFC107;
+            color: #333;
+        }
+        .approved {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .rejected {
+            background-color: #f44336;
+            color: white;
+        }
+        .in-secondary-review {
+            background-color: #2196F3;
+            color: white;
+        }
+        .nav-links {
+            margin-bottom: 20px;
+            text-align: center;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+        }
+        .nav-links a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: #0066cc;
+            font-weight: bold;
+            font-size: 16px;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover {
+            color: #004c99;
+            text-decoration: underline;
+        }
+        .workflow-status {
+            margin-top: 10px;
+            font-style: italic;
+            color: #666;
+            padding: 8px;
+            background-color: #f5f5f5;
+            border-radius: 4px;
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+            gap: 10px;
+        }
+        .user-data-container {
+            margin-top: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .tab-active {
+            background-color: #0b7dda;
+        }
+        .approval-summary {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #f0f0f0;
+            border-radius: 8px;
+            text-align: center;
+            border-left: 4px solid #9C27B0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+        }
+        .final-results-container {
+            margin: 20px 0;
+            padding: 20px;
+            background-color: #f0fff0;
+            border-radius: 8px;
+            border-left: 4px solid #4CAF50;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .final-results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 10px;
+        }
+        .final-results-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+        .final-results-refresh {
+            font-size: 14px;
+            color: #2196F3;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 4px;
+            background-color: #e3f2fd;
+            transition: background-color 0.3s;
+        }
+        .final-results-refresh:hover {
+            background-color: #bbdefb;
+        }
+        .final-result-item {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+        }
+        .final-result-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .final-result-item.highlight {
+            border-right: 4px solid #4CAF50;
+            background-color: #f1f8e9;
+        }
+        .no-results {
+            text-align: center;
+            color: #777;
+            font-style: italic;
+            padding: 20px;
+        }
+        .data-display {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            border-right: 3px solid #2196F3;
+        }
+        .data-label {
+            display: inline-block;
+            min-width: 180px;
+            font-weight: bold;
+            color: #0066cc;
+        }
+        .data-value {
+            font-weight: normal;
+            color: #333;
+        }
+        .data-section {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed #ccc;
+        }
+        .data-section:last-child {
+            border-bottom: none;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        .page {
+            display: none;
+        }
+        .page.active {
+            display: block;
+        }
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        /* Tab-links styles (copied from the primary reviewer dashboard) */
+        .tab-links {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+        .tab-link {
+            padding: 10px 20px;
+            margin: 0 5px;
+            cursor: pointer;
+            border-radius: 4px 4px 0 0;
+            font-weight: bold;
+            text-align: center;
+            transition: all 0.3s;
+            min-width: 120px;
+        }
+        .tab-link.active {
+            background-color: #2196F3;
+            color: white;
+            border: 1px solid #2196F3;
+            border-bottom: none;
+            position: relative;
+        }
+        .tab-link.active:after {
+            content: "";
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: #2196F3;
+        }
+        .tab-link.pending {
+            background-color: #FFC107;
+            color: #333;
+            border: 1px solid #FFC107;
+        }
+        .tab-link.approved {
+            background-color: #4CAF50;
+            color: white;
+            border: 1px solid #4CAF50;
+        }
+        .tab-link.rejected {
+            background-color: #f44336;
+            color: white;
+            border: 1px solid #f44336;
+        }
+        .tab-link:not(.active) {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            color: #666;
+        }
+        .tab-link:hover:not(.active) {
+            background-color: #e9e9e9;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .badge-counter {
+            background-color: #FF5722;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 8px;
+            font-size: 12px;
+            margin-right: 5px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav-links">
+            <a href="{{ url_for('index') }}">صفحه اصلی</a>
+            <a href="{{ url_for('logout') }}">خروج</a>
+        </div>
+        
+        <!-- Main Dashboard Page -->
+        <div id="main-page" class="page active">
+            <h1>داشبورد انبار</h1>
+            
+            <!-- New tab-links navigation replacing the menu section -->
+            <div class="tab-links">
+                <div id="tab-all" class="tab-link active" onclick="showPage('main-page')">صفحه اصلی <span id="count-all" class="badge-counter">0</span></div>
+                <div id="tab-pending" class="tab-link pending" onclick="showPage('pending-data-page')">در انتظار بررسی <span id="count-pending" class="badge-counter">0</span></div>
+                <div id="tab-approved" class="tab-link approved" onclick="showPage('approved-data-page')">تایید شده‌ها <span id="count-approved" class="badge-counter">0</span></div>
+                <div id="tab-rejected" class="tab-link rejected" onclick="showPage('not-approved-data-page')">رد شده‌ها <span id="count-rejected" class="badge-counter">0</span></div>
+            </div>
+            
+            <!-- Main content starts here -->
+            
+            <div class="submission-form">
+                <h2>ارسال داده جدید</h2>
+                <form id="data-form">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="A">نوع محصول را انتخاب نمایید:</label>
+                            <select id="A" name="A" required>
+                                <option value="" disabled selected>انتخاب نوع محصول</option>
+                                <option value="کلاهک 90">کلاهک 90</option>
+                                <option value="کلاهک 140">کلاهک 140</option>
+                                <option value="کلاهک 180">کلاهک 180</option>
+                                <option value="کلاهک 210">کلاهک 210</option>
+                                <option value="دستک 140">دستک 140</option>
+                                <option value="دستک 180">دستک 180</option>
+                                <option value="اشپیل 16">اشپیل 16</option>
+                                <option value="اشپیل 20">اشپیل 20</option>
+                                <option value="دیسک 80">دیسک 80</option>
+                                <option value="دیسک 120">دیسک 120</option>
+                                <option value="دیسک 160">دیسک 160</option>
+                                <option value="دیسک 210">دیسک 210</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="B">وزن (کیلوگرم):</label>
+                            <input type="number" id="B" name="B" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="C">تعداد (عدد):</label>
+                            <input type="number" id="C" name="C" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="D">کد کالا :</label>
+                            <input type="string" id="D" name="D" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="E">تعداد سالم بعد از شمارش (عدد):</label>
+                            <input type="number" id="E" name="E" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="manufacturer">سازنده:</label>
+                            <input type="text" id="manufacturer" name="manufacturer" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="date">تاریخ:</label>
+                        <input type="date" id="date" name="date" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-submit">ارسال داده</button>
+                </form>
+            </div>
+            
+            <div class="approval-summary" id="approval-summary">
+                <!-- Summary will be displayed here -->
+            </div>
+        </div>
+        
+        <!-- Approved Data Page -->
+        <div id="approved-data-page" class="page">
+            <div class="page-header">
+                <h1>داده‌های تایید شده واحد کنترل تولید</h1>
+                <button class="btn btn-back" onclick="showPage('main-page')">بازگشت به داشبورد</button>
+            </div>
+            
+            <div class="user-data-container">
+                <div class="final-results-refresh" onclick="fetchFilteredUserData('user1', 'approved')">
+                    <i class="fas fa-sync-alt"></i> بروزرسانی
+                </div>
+                <div id="approved-submissions">
+                    <p>در حال بارگیری...</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Pending Data Page -->
+        <div id="pending-data-page" class="page">
+            <div class="page-header">
+                <h1>داده‌های در انتظار بررسی واحد کنترل تولید</h1>
+                <button class="btn btn-back" onclick="showPage('main-page')">بازگشت به داشبورد</button>
+            </div>
+            
+            <div class="user-data-container">
+                <div class="final-results-refresh" onclick="fetchFilteredUserData('user1', 'pending')">
+                    <i class="fas fa-sync-alt"></i> بروزرسانی
+                </div>
+                <div id="pending-submissions">
+                    <p>در حال بارگیری...</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Not Approved (Rejected) Data Page -->
+        <div id="not-approved-data-page" class="page">
+            <div class="page-header">
+                <h1>داده‌های رد شده واحد کنترل تولید</h1>
+                <button class="btn btn-back" onclick="showPage('main-page')">بازگشت به داشبورد</button>
+            </div>
+            
+            <div class="user-data-container">
+                <div class="final-results-refresh" onclick="fetchFilteredUserData('user1', 'rejected')">
+                    <i class="fas fa-sync-alt"></i> بروزرسانی
+                </div>
+                <div id="rejected-submissions">
+                    <p>در حال بارگیری...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            updateApprovalSummary();
+            updateCountBadges(); // Add this to update the counter badges
+            
+            document.getElementById('data-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                submitForm();
+            });
+        });
+        
+        // Function to switch between pages and update active tab
+        function showPage(pageId) {
+            // Hide all pages
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Show the selected page
+            document.getElementById(pageId).classList.add('active');
+            
+            // Update active tab
+            document.querySelectorAll('.tab-link').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Map page IDs to tab IDs
+            const tabMapping = {
+                'main-page': 'tab-all',
+                'approved-data-page': 'tab-approved',
+                'pending-data-page': 'tab-pending',
+                'not-approved-data-page': 'tab-rejected'
+            };
+            
+            // Set the active tab
+            if (tabMapping[pageId]) {
+                document.getElementById(tabMapping[pageId]).classList.add('active');
+            }
+            
+            // If showing the approved data page, load the data
+            if (pageId === 'approved-data-page') {
+                fetchFilteredUserData('user1', 'approved');
+            }
+            
+            // If showing the pending data page, load the data
+            else if (pageId === 'pending-data-page') {
+                fetchFilteredUserData('user1', 'pending');
+            }
+            
+            // If showing the not-approved (rejected) data page, load the data
+            else if (pageId === 'not-approved-data-page') {
+                fetchFilteredUserData('user1', 'rejected');
+            }
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        // Function to update counter badges
+        function updateCountBadges() {
+            fetch('/approval_summary')
+                .then(response => response.json())
+                .then(data => {
+                    // Update badge counters
+                    document.getElementById('count-all').textContent = 
+                        data.user1.approved + data.user1.rejected + data.user1.pending;
+                    document.getElementById('count-pending').textContent = data.user1.pending;
+                    document.getElementById('count-approved').textContent = data.user1.approved;
+                    document.getElementById('count-rejected').textContent = data.user1.rejected;
+                })
+                .catch(error => {
+                    console.error('Error updating count badges:', error);
+                });
+        }
+
+        // Function to fetch user1 final results
+        function fetchUser1FinalResults() {
+            fetch('/user1_final_results')
+                .then(response => response.json())
+                .then(data => {
+                    displayUser1FinalResults(data);
+                })
+                .catch(error => {
+                    console.error('Error fetching user1 final results:', error);
+                    document.getElementById('final-results-content').innerHTML = 
+                        '<p class="no-results">خطا در بارگیری نتایج نهایی</p>';
+                });
+        }
+
+        // Function to display final results from user1
+        function displayUser1FinalResults(results) {
+            const container = document.getElementById('final-results-content');
+            
+            if (!results || results.length === 0) {
+                container.innerHTML = '<p class="no-results">هیچ نتیجه نهایی از بررسی کننده اصلی وجود ندارد</p>';
+                return;
+            }
+            
+            let html = '';
+            
+            // Sort results by timestamp, newest first
+            results.sort((a, b) => b.final_decision_timestamp - a.final_decision_timestamp);
+            
+            results.forEach(result => {
+                const statusClass = result.approved ? 'approved' : 'rejected';
+                const statusText = result.approved ? 'تایید شده' : 'رد شده';
+                const highlightClass = result.new ? 'highlight' : '';
+                
+                html += `
+                    <div class="final-result-item ${highlightClass}">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <div>
+                                <strong>تاریخ تصمیم نهایی:</strong> ${new Date(result.final_decision_timestamp * 1000).toLocaleString('fa-IR')}
+                            </div>
+                            <div>
+                                <span class="status-badge ${statusClass}">${statusText}</span>
+                            </div>
+                        </div>
+                        <div class="data-section">
+                            <p><span class="data-label">نوع محصول:</span> <span class="data-value">${result.A}</span></p>
+                            <p><span class="data-label">وزن (کیلوگرم):</span> <span class="data-value">${result.B}</span></p>
+                            <p><span class="data-label">تعداد (عدد):</span> <span class="data-value">${result.C}</span></p>
+                            <p><span class="data-label">کد کالا:</span> <span class="data-value">${result.D}</span></p>
+                            <p><span class="data-label">تعداد سالم:</span> <span class="data-value">${result.E}</span></p>
+                            <p><span class="data-label">سازنده:</span> <span class="data-value">${result.manufacturer}</span></p>
+                            <p><span class="data-label">تاریخ:</span> <span class="data-value">${result.date}</span></p>
+                            ${result.comment ? `<p><span class="data-label">توضیحات بررسی کننده:</span> <span class="data-value">${result.comment}</span></p>` : ''}
+                        </div>
+                    </div>`;
+            });
+            
+            container.innerHTML = html;
+            
+            // After displaying new results, mark them as seen
+            if (results.some(r => r.new)) {
+                markNewResultsAsSeen();
+            }
+        }
+
+        // Function to mark new results as seen
+        function markNewResultsAsSeen() {
+            fetch('/mark_results_seen', {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Marked results as seen:', data);
+            })
+            .catch(error => {
+                console.error('Error marking results as seen:', error);
+            });
+        }
+
+        function updateApprovalSummary() {
+            fetch('/approval_summary')
+                .then(response => response.json())
+                .then(data => {
+                    const summaryContainer = document.getElementById('approval-summary');
+                    summaryContainer.innerHTML = `
+                        <p><strong>خلاصه وضعیت تایید:</strong></p>
+                        <p>کاربر 1: ${data.user1.approved} تایید شده، ${data.user1.rejected} رد شده، ${data.user1.pending} در انتظار</p>
+                        <p>کاربر جدید: ${data.newuser.approved} تایید شده، ${data.newuser.rejected} رد شده، ${data.newuser.pending} در انتظار</p>
+                    `;
+                    
+                    // Update the badge counters after getting the counts
+                    updateCountBadges();
+                })
+                .catch(error => {
+                    console.error('Error fetching approval summary:', error);
+                    document.getElementById('approval-summary').innerHTML = '';
+                });
+        }
+
+        // Function to fetch filtered user data with enhanced rejected filter
+        function fetchFilteredUserData(username, status) {
+            fetch(`/view_user_data/${username}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Filter data by status
+                    let filteredData = [];
+                    if (status === 'approved') {
+                        filteredData = data.filter(item => 
+                            (item.review_status === 'approved' && item.primary_review_completed === true) || 
+                            (item.final_decision_made === true && item.approved === true)
+                        );
+                        displayFilteredData('approved', filteredData);
+                    } else if (status === 'pending') {
+                        filteredData = data.filter(item => 
+                            item.review_status === 'pending' || 
+                            (item.primary_review_completed !== true && item.final_decision_made !== true)
+                        );
+                        displayFilteredData('pending', filteredData);
+                    } else if (status === 'rejected') {
+                        // Enhanced filter for rejected items to ensure all rejected items are captured
+                        filteredData = data.filter(item => 
+                            // Check all possible ways an item could be rejected
+                            item.review_status === 'rejected' || 
+                            (item.final_decision_made === true && item.approved === false) ||
+                            (item.primary_review_completed === true && item.review_status === 'rejected') ||
+                            (item.secondary_review_completed === true && item.review_status === 'rejected') ||
+                            // Also check for explicit rejection property that might be set
+                            item.rejected === true
+                        );
+                        console.log('Rejected items:', filteredData);
+                        displayFilteredData('rejected', filteredData);
+                    }
+                    
+                    // After fetching data, update the badge counters
+                    updateApprovalSummary();
+                })
+                .catch(error => {
+                    console.error(`Error fetching ${username} data:`, error);
+                    document.getElementById(`${status}-submissions`).innerHTML = 
+                        '<p>خطا در بارگیری داده‌ها</p>';
+                });
+        }
+
+        // Function to display filtered data
+        function displayFilteredData(status, submissions) {
+            const container = document.getElementById(`${status}-submissions`);
+            
+            if (submissions.length === 0) {
+                container.innerHTML = `<p>هیچ داده ${status === 'approved' ? 'تایید شده' : (status === 'pending' ? 'در انتظار' : 'رد شده')} از کاربر 1 وجود ندارد</p>`;
+                return;
+            }
+            
+            let html = '';
+            
+            submissions.forEach(submission => {
+                let statusClass = 'pending';
+                let statusText = 'در انتظار بررسی';
+                let workflowStatus = 'در انتظار بررسی اولیه توسط بررسی کننده اصلی';
+                
+                // First check if there's a final decision
+                if (submission.final_decision_made === true) {
+                    if (submission.approved === true) {
+                        statusClass = 'approved';
+                        statusText = 'تایید شده';
+                        workflowStatus = 'تایید نهایی شده';
+                    } else {
+                        statusClass = 'rejected';
+                        statusText = 'رد شده';
+                        workflowStatus = 'رد شده در بررسی نهایی';
+                    }
+                }
+                // If no final decision but primary review is completed
+                else if (submission.primary_review_completed === true) {
+                    if (submission.review_status === 'approved') {
+                        statusClass = 'approved';
+                        statusText = 'تایید شده';
+                        workflowStatus = 'تایید شده توسط بررسی کننده اصلی';
+                    } else if (submission.review_status === 'rejected') {
+                        statusClass = 'rejected';
+                        statusText = 'رد شده';
+                        workflowStatus = 'رد شده توسط بررسی کننده اصلی';
+                    } else if (submission.review_status === 'in_secondary_review') {
+                        statusClass = 'in-secondary-review';
+                        statusText = 'در حال بررسی ثانویه';
+                        workflowStatus = 'تایید شده توسط بررسی کننده اصلی، در انتظار بررسی ثانویه';
+                    }
+                }
+                // If secondary review is completed
+                else if (submission.secondary_review_completed === true) {
+                    if (submission.review_status === 'approved') {
+                        statusClass = 'approved';
+                        statusText = 'تایید شده';
+                        workflowStatus = 'تایید شده توسط بررسی کننده ثانویه';
+                    } else if (submission.review_status === 'rejected') {
+                        statusClass = 'rejected';
+                        statusText = 'رد شده';
+                        workflowStatus = 'رد شده توسط بررسی کننده ثانویه';
+                    }
+                }
+                
+                html += `
+                    <div class="submission-item">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <div>
+                                <strong>تاریخ ارسال:</strong> ${new Date(submission.submission_timestamp * 1000).toLocaleString('fa-IR')}
+                            </div>
+                            <div>
+                                <span class="status-badge ${statusClass}">${statusText}</span>
+                            </div>
+                        </div>
+                        <div class="data-section">
+                            <p><span class="data-label">نوع محصول:</span> <span class="data-value">${submission.A}</span></p>
+                            <p><span class="data-label">وزن (کیلوگرم):</span> <span class="data-value">${submission.B}</span></p>
+                            <p><span class="data-label">تعداد (عدد):</span> <span class="data-value">${submission.C}</span></p>
+                            <p><span class="data-label">کد کالا:</span> <span class="data-value">${submission.D}</span></p>
+                            <p><span class="data-label">تعداد سالم:</span> <span class="data-value">${submission.E}</span></p>
+                            <p><span class="data-label">سازنده:</span> <span class="data-value">${submission.manufacturer}</span></p>
+                            <p><span class="data-label">تاریخ:</span> <span class="data-value">${submission.date}</span></p>
+                        </div>
+                        <div class="workflow-status"><strong>مرحله بررسی:</strong> ${workflowStatus}</div>
+                    </div>`;
+            });
+            
+            container.innerHTML = html;
+        }
+
+        function submitForm() {
+            const form = document.getElementById('data-form');
+            const formData = {
+                A: document.getElementById('A').value,
+                B: document.getElementById('B').value,
+                C: document.getElementById('C').value,
+                D: document.getElementById('D').value,
+                E: document.getElementById('E').value,
+                manufacturer: document.getElementById('manufacturer').value,
+                date: document.getElementById('date').value,
+                currentDateTime: new Date().toISOString(),
+                review_status: 'pending',  // Initially set as pending
+                primary_review_completed: false,
+                secondary_review_completed: false,
+                final_decision_made: false
+            };
+            
+            fetch('/save_numbers', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    alert('داده‌ها با موفقیت ارسال شدند و برای بررسی اولیه به بررسی کننده اصلی فرستاده شدند');
+                    form.reset();
+                    updateApprovalSummary();
+                    
+                    // Show the pending page after successfully submitting a new entry
+                    showPage('pending-data-page');
+                } else {
+                    alert('خطا: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error saving data:', error);
+                alert('خطا در ارسال داده‌ها');
+            });
+        }
+    </script>
+</body>
+</html>
