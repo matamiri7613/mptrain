@@ -28,7 +28,7 @@ jobs:
       with:
         host: 82.115.21.17
         username: root
-        key: 133976beh
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
           # Create directory if it doesn't exist
           mkdir -p /var/www/flask-app
@@ -88,4 +88,21 @@ jobs:
           nginx -t && systemctl restart nginx
           
     - name: Copy application files
-      uses: appleboy/scp-actio
+      uses: appleboy/scp-action@master
+      with:
+        host: 82.115.21.17
+        username: root
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        source: "*.py,templates/*,static/*,*.json"
+        target: "/var/www/flask-app"
+        strip_components: 0
+        
+    - name: Restart application
+      uses: appleboy/ssh-action@master
+      with:
+        host: 82.115.21.17
+        username: root
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        script: |
+          systemctl restart flask-app
+          echo "Deployment completed successfully!"
