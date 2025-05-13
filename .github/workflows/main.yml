@@ -28,7 +28,7 @@ jobs:
       with:
         host: 82.115.21.17
         username: root
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        key: 133976beh
         script: |
           # Create directory if it doesn't exist
           mkdir -p /var/www/flask-app
