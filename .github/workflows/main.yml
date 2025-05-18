@@ -2,7 +2,7 @@ name: Deploy Flask App
 
 on:
   push:
-    branches: [ main ]  # Change this to your main branch name if different
+    branches: [ master ]  # Change this to your main branch name if different
 
 jobs:
   deploy:
@@ -26,7 +26,7 @@ jobs:
     - name: Deploy to server
       uses: appleboy/ssh-action@master
       with:
-        host: 82.115.21.17
+        host: 85.198.17.236
         username: root
         password: 133976beh
         script: |
@@ -73,7 +73,7 @@ jobs:
           cat > /tmp/flask-app << 'EOL'
           server {
               listen 80;
-              server_name 82.115.21.17;
+              server_name 85.198.17.236;
               
               location / {
                   proxy_pass http://127.0.0.1:8000;
@@ -90,7 +90,7 @@ jobs:
     - name: Copy application files
       uses: appleboy/scp-action@master
       with:
-        host: 82.115.21.17
+        host: 85.198.17.236
         username: root
         password: 133976beh
         source: "*.py,templates/*,static/*,*.json"
@@ -100,7 +100,7 @@ jobs:
     - name: Restart application
       uses: appleboy/ssh-action@master
       with:
-        host: 82.115.21.17
+        host: 85.198.17.236
         username: root
         password: 133976beh
         script: |
