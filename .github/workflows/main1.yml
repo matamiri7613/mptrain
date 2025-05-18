@@ -1,4 +1,4 @@
-name: Deploy Flask App
+name: Deploy Flask App on Asia tek
 
 on:
   push:
