@@ -3,7 +3,6 @@ name: Deploy Flask App
 on:
   push:
     branches: [ master ]  # Change this to your main branch name if different
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
