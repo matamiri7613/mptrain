@@ -26,7 +26,7 @@ jobs:
     - name: Deploy to server
       uses: appleboy/ssh-action@master
       with:
-        host: 82.115.21.17
+        host: 85.198.17.236
         username: root
         password: 133976beh
         script: |
@@ -90,7 +90,7 @@ jobs:
     - name: Copy application files
       uses: appleboy/scp-action@master
       with:
-        host: 82.115.21.17
+        host: 85.198.17.236
         username: root
         password: 133976beh
         source: "*.py,templates/*,static/*,*.json"
@@ -100,7 +100,7 @@ jobs:
     - name: Restart application
       uses: appleboy/ssh-action@master
       with:
-        host: 82.115.21.17
+        host: 85.198.17.236
         username: root
         password: 133976beh
         script: |
